@@ -1,17 +1,22 @@
-from settings import *
-from pytmx.util_pygame import load_pygame
-from os.path import join
+from .settings import *
+from .world import World, Levels
 
 
 class Game:
     def __init__(self):
-        pygame.init()
-        self.display_surface = pygame.display.set_mode((WINDOW.WIDTH, WINDOW.HEIGHT))
-        pygame.display.set_caption(GAME_NAME)
-        self.import_assets()
+        # init
+        self.world = None
+        self.tmx_maps = None
 
-    def import_assets(self):
-        self.tmx_maps = {'world': load_pygame(join('..', 'maps', 'world.tmx'))}
+        # setup
+        pygame.init()
+        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        pygame.display.set_caption(GAME_NAME)
+
+    def load_world(self, level):
+        if level == None:
+            level = Levels.WORLD_1 #TODO: MENU
+        self.world = World(level)
 
     def run(self):
         while True:
