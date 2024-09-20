@@ -1,0 +1,61 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "world_1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Tilemap_1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tileset_1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tileset_2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tileset_3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "world_1.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 144.66666666666666,
+                "y": 91.66666666666667
+            }
+        }
+    },
+    "last.imagePath": "D:/dev/facul/pygame/DudeJustSurvive/assets/tilesets/walls",
+    "map.height": 40,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 60,
+    "openFiles": [
+        "Tileset_1.tsx",
+        "Tileset_2.tsx",
+        "Tileset_3.tsx",
+        "world_1.tmx"
+    ],
+    "project": "DudeJustSurvive.tiled-project",
+    "recentFiles": [
+        "Tileset_1.tsx",
+        "Tileset_2.tsx",
+        "Tileset_3.tsx",
+        "world_1.tmx",
+        "Tilemap_1.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

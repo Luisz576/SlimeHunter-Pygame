@@ -1,7 +1,7 @@
 import pygame.time
 
 from .settings import *
-from game.level import Level
+from game.level import level_builder, Levels
 
 
 class Game:
@@ -16,8 +16,10 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
+        self.load_level()
+
     def load_level(self):
-        self.level = Level()
+        self.level = level_builder(Levels.WORLD_1)
 
     def run(self):
         if self.level is None:
@@ -25,6 +27,8 @@ class Game:
 
         # Game Loop
         while True:
+            delta = self.clock.tick() / 1000
+
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -32,6 +36,6 @@ class Game:
                     exit()
 
             # Game Logic
-            delta = self.clock.tick() / 1000
             self.level.run(delta)
             pygame.display.update()
+            print(f"FPS: {self.clock.get_fps()}")
