@@ -1,5 +1,7 @@
 import pygame
+from enum import Enum
 from sys import exit
+from os.path import join
 
 GAME_NAME = "Dude Just Survive"
 
@@ -8,6 +10,6 @@ WINDOW_HEIGHT = 720
 
 TILE_SIZE = 64
 COLORS = {
-    "white": "#f4f4f4",
-    "black": "#0a0a0a",
+    "white": "#ffffff",
+    "black": "#000000",
 }

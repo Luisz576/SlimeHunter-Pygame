@@ -1,30 +1,37 @@
+import pygame.time
+
 from .settings import *
-from .world import World, Levels
+from game.level import Level
 
 
 class Game:
     def __init__(self):
-        # init
-        self.world = None
-        self.tmx_maps = None
+        # init vars
+        self.level = None
 
         # setup
         pygame.init()
-        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption(GAME_NAME)
 
-    def load_world(self, level):
-        if level == None:
-            level = Levels.WORLD_1 #TODO: MENU
-        self.world = World(level)
+        self.clock = pygame.time.Clock()
+
+    def load_level(self):
+        self.level = Level()
 
     def run(self):
+        if self.level is None:
+            raise Exception("No level loaded!")
+
+        # Game Loop
         while True:
-            # EVENTS
+            # Events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
 
-            # LOGIC
+            # Game Logic
+            delta = self.clock.tick() / 1000
+            self.level.run(delta)
             pygame.display.update()
