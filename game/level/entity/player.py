@@ -1,19 +1,10 @@
 from game.settings import *
+from game.level.entity import Entity
 
 
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, position, group):
-        super().__init__(group)
-
-        # sprite
-        self.image = pygame.Surface((32, 32))
-        self.image.fill('green')
-        self.rect = self.image.get_rect(center=position)
-
-        # attributes
-        self.position = pygame.math.Vector2(self.rect.center)
-        self.speed = 200
-        self.velocity = pygame.math.Vector2(0, 0)
+        super().__init__(position, group)
 
     def _input(self):
         keys = pygame.key.get_pressed()
@@ -33,16 +24,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.velocity.x = 0
 
-    def _move(self, delta):
-        # normalizationws
-        if self.velocity.magnitude() > 0:
-            self.velocity = self.velocity.normalize()
-        # moviment
-        self.position.x += self.velocity.x * self.speed * delta
-        self.rect.centerx = self.position.x
-        self.position.y += self.velocity.y * self.speed * delta
-        self.rect.centery = self.position.y
-
     def update(self, delta):
         self._input()
-        self._move(delta)
+
+        super().update(delta)
