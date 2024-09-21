@@ -18,6 +18,6 @@ class AllSpritesGroup(pygame.sprite.Group):
             sprites_by_layer[sprite.z].append(sprite)
 
         for layer in WorldLayersValues():
-            sprites_by_layer[layer] = sorted(sprites_by_layer[layer], key=lambda s: s.rect.centery)
+            sprites_by_layer[layer] = sorted(sprites_by_layer[layer], key=lambda s: s.y_sort)
             for sprite in sprites_by_layer[layer]:
                 self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)

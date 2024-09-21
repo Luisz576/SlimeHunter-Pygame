@@ -36,4 +36,5 @@ class Entity(Sprite):
 
     def update(self, delta):
         self._move(delta)
+        self.y_sort = self.rect.centery
         self._animate(delta)

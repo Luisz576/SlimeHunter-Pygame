@@ -4,12 +4,13 @@ from ..settings import *
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos, surf, group, use_rect_center=False, z=WorldLayers.BUILDING):
         super().__init__(group)
-        self.z = z
         self.image = surf
         if use_rect_center:
             self.rect = self.image.get_rect(center=pos)
         else:
             self.rect = self.image.get_rect(topleft=pos)
+        self.z = z
+        self.y_sort = self.rect.centery
 
 
 class AnimatedSprite(Sprite):
