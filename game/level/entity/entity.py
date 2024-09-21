@@ -1,17 +1,15 @@
-from game.components import AnimationController
+from game.components import AnimationController, Sprite
 from game.settings import *
 
 
-class Entity(pygame.sprite.Sprite):
+class Entity(Sprite):
     def __init__(self, position, group, animations, start_animation_name):
-        super().__init__(group)
-
         self.animation_controller = AnimationController(animations, start_animation_name)
         self.animation_controller.play()
 
+        super().__init__(position, self.animation_controller.frame(), group, use_rect_center=True, z=WorldLayers.ENTITY)
+
         # render
-        self.image = self.animation_controller.frame()
-        self.rect = self.image.get_rect(center=position)
         self.flipped = False
 
         # attributes

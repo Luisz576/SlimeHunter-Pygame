@@ -9,7 +9,7 @@ class Levels(Enum):
 
 
 class Level:
-    def __init__(self, map_path, map_layers):
+    def __init__(self, map_path, map_layers, map_collision_layers):
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
@@ -17,7 +17,7 @@ class Level:
         self.all_sprites = AllSpritesGroup()
 
         # map
-        self.map = Map(map_path, map_layers, self.all_sprites)
+        self.map = Map(map_path, map_layers, map_collision_layers, self.all_sprites)
         # player
         self.player = Player(
             (random.randint(10, 600), random.randint(10, 600)),
@@ -34,4 +34,4 @@ class Level:
 
 def level_builder(level):
     if level == Levels.WORLD_1:
-        return Level(join('map', 'world_1.tmx'), ['floor', 'walls'])
+        return Level(join('map', 'world_1.tmx'), ['floor', 'walls'], [])

@@ -16,3 +16,18 @@ COLORS = {
     "white": "#ffffff",
     "black": "#000000",
 }
+
+
+class WorldLayers(Enum):
+    BACKGROUND = 1
+    BUILDING = 2
+    SHADOW = 3
+    ITEM = 4
+    ENTITY = 5
+    AIR = 6
+
+
+def WorldLayersValues():
+    return [WorldLayers.BACKGROUND, WorldLayers.BUILDING, WorldLayers.SHADOW, WorldLayers.ITEM, WorldLayers.ENTITY,
+            WorldLayers.AIR]
+

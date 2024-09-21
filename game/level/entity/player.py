@@ -1,5 +1,5 @@
 from game.settings import *
-from game.support import import_named_animations
+from game.importer import import_named_animations
 from game.level.entity import Entity
 
 

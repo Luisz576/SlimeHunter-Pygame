@@ -11,6 +11,13 @@ class AllSpritesGroup(pygame.sprite.Group):
         self.offset.x = -(center[0] - WINDOW_WIDTH / 2)
         self.offset.y = -(center[1] - WINDOW_HEIGHT / 2)
 
+        sprites_by_layer = {}
+        for layer in WorldLayersValues():
+            sprites_by_layer[layer] = []
         for sprite in self:
-            self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+            sprites_by_layer[sprite.z].append(sprite)
 
+        for layer in WorldLayersValues():
+            sprites_by_layer[layer] = sorted(sprites_by_layer[layer], key=lambda s: s.rect.centery)
+            for sprite in sprites_by_layer[layer]:
+                self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
