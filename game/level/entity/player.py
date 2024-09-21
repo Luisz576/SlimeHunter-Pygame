@@ -1,6 +1,7 @@
 from game.settings import *
-from game.importer import import_named_animations
+from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
+from game.components import FollowableSprite
 
 
 hash_player_data = {}
@@ -9,7 +10,11 @@ hash_player_data = {}
 def build_player_data(animations, start_animation_name):
     return {
         "animations": animations,
-        "start_animation_name": start_animation_name
+        "start_animation_name": start_animation_name,
+        "shadow": {
+            "path": join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
+            "offset": Vector2(2, 17)
+        }
     }
 
 
@@ -38,8 +43,16 @@ def get_player_data(player_key):
 
 
 class Player(Entity):
-    def __init__(self, position, group, player_data):
-        super().__init__(position, group, player_data['animations'], player_data['start_animation_name'])
+    def __init__(self, pos, group, player_data):
+        super().__init__(pos, group, player_data['animations'], player_data['start_animation_name'])
+        # shadow
+        self.shadow = FollowableSprite(
+            import_image(player_data['shadow']['path']),
+            self,
+            group,
+            offset=player_data['shadow']['offset'],
+            z=WorldLayers.SHADOW
+        )
 
     def _input(self):
         keys = pygame.key.get_pressed()

@@ -1,4 +1,5 @@
-from ..settings import *
+from game.settings import *
+from game.components import FollowableSprite
 
 
 class AllSpritesGroup(pygame.sprite.Group):
@@ -20,4 +21,7 @@ class AllSpritesGroup(pygame.sprite.Group):
         for layer in WorldLayersValues():
             sprites_by_layer[layer] = sorted(sprites_by_layer[layer], key=lambda s: s.y_sort)
             for sprite in sprites_by_layer[layer]:
-                self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                if isinstance(sprite, FollowableSprite):
+                    self.display_surface.blit(sprite.image, sprite.target.rect.topleft + sprite.offset + self.offset)
+                else:
+                    self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
