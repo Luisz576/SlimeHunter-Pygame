@@ -68,6 +68,7 @@ class Player(Entity):
         else:
             self.animation_controller.change("idle")
 
-        self.flipped = self.velocity.x < 0
+        if self.velocity.x != 0:
+            self.flipped = self.velocity.x < 0
 
         super().update(delta)
