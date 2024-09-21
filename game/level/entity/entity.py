@@ -1,19 +1,30 @@
+from game.components import AnimationController
 from game.settings import *
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, position, group):
+    def __init__(self, position, group, animations, start_animation_name):
         super().__init__(group)
 
-        # render // TODO:
-        self.image = pygame.Surface((32, 32))
-        self.image.fill('green')
+        self.animation_controller = AnimationController(animations, start_animation_name)
+        self.animation_controller.play()
+
+        # render
+        self.image = self.animation_controller.frame()
         self.rect = self.image.get_rect(center=position)
+        self.flipped = False
 
         # attributes
         self.position = pygame.math.Vector2(self.rect.center)
         self.speed = 200
         self.velocity = pygame.math.Vector2(0, 0)
+
+    def _animate(self, delta):
+        self.animation_controller.update(delta)
+        self.image = pygame.transform.flip(self.animation_controller.frame(), self.flipped, False)
+
+    def is_moving(self):
+        return self.velocity.x != 0 or self.velocity.y != 0
 
     def _move(self, delta):
         # normalizationws
@@ -27,3 +38,4 @@ class Entity(pygame.sprite.Sprite):
 
     def update(self, delta):
         self._move(delta)
+        self._animate(delta)

@@ -1,9 +1,7 @@
-import random
-
 from game.settings import *
 from .map import Map
-from game.components.groups import AllSpritesGroup
-from game.level.entity import Player
+from game.components import AllSpritesGroup
+from game.level.entity import Player, get_player_data, Players
 
 
 class Levels(Enum):
@@ -21,7 +19,11 @@ class Level:
         # map
         self.map = Map(map_path, map_layers, self.all_sprites)
         # player
-        self.player = Player((random.randint(10, 600), random.randint(10, 600)), self.all_sprites)
+        self.player = Player(
+            (random.randint(10, 600), random.randint(10, 600)),
+            self.all_sprites,
+            get_player_data(Players.SOLDIER)
+        )
 
     def run(self, delta):
         self.display_surface.fill(COLORS['black'])
