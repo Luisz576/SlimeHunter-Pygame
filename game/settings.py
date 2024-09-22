@@ -18,6 +18,11 @@ COLORS = {
 }
 
 
+class Axis(Enum):
+    HORIZONTAL = "horizontal"
+    VERTICAL = "vertical"
+
+
 class WorldLayers(Enum):
     BACKGROUND = 1
     BUILDING = 2

@@ -43,8 +43,8 @@ def get_player_data(player_key):
 
 
 class Player(Entity):
-    def __init__(self, pos, group, player_data):
-        super().__init__(pos, group, player_data['animations'], player_data['start_animation_name'])
+    def __init__(self, pos, group, player_data, collision_group):
+        super().__init__(pos, group, collision_group, player_data['animations'], player_data['start_animation_name'])
         # shadow
         self.shadow = FollowableSprite(
             import_image(player_data['shadow']['path']),

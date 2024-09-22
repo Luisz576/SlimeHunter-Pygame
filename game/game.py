@@ -38,4 +38,4 @@ class Game:
             # Game Logic
             self.level.run(delta)
             pygame.display.update()
-            print(f"FPS: {self.clock.get_fps()}")
+            # print(f"FPS: {self.clock.get_fps()}")

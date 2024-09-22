@@ -5,12 +5,10 @@ class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos, surf, group, use_rect_center=False, z=WorldLayers.BUILDING):
         super().__init__(group)
         self.image = surf
-        if use_rect_center:
-            self.rect = self.image.get_rect(center=pos)
-        else:
-            self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(center=pos) if use_rect_center else self.image.get_rect(topleft=pos)
         self.z = z
         self.y_sort = self.rect.centery
+        self.hitbox = self.rect.copy()
 
 
 class FollowableSprite(Sprite):
@@ -20,8 +18,14 @@ class FollowableSprite(Sprite):
         self.offset = offset
 
 
+class CollidableSprite(Sprite):
+    def __init__(self, pos, surf, group, use_rect_center=False, z=WorldLayers.BUILDING):
+        super().__init__(pos, surf, group, use_rect_center=use_rect_center, z=z)
+
+
 class AnimatedSprite(Sprite):
-    def __init__(self, pos, frames, group, frame_index=0, animation_speed=4, use_rect_center=False, z=WorldLayers.BUILDING):
+    def __init__(self, pos, frames, group, frame_index=0, animation_speed=4, use_rect_center=False,
+                 z=WorldLayers.BUILDING):
         self.frame_index = frame_index
         self.animation_speed = animation_speed
         self.frames = frames

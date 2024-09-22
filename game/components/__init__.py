@@ -1,4 +1,3 @@
-from .sprite import Sprite, AnimatedSprite, FollowableSprite
+from .sprite import Sprite, AnimatedSprite, FollowableSprite, CollidableSprite
 from .animation import Animation, AnimationController
-from .groups import AllSpritesGroup
-from .collision import Body2D
+from .groups import AllSpritesGroup, CollisionSpritesGroup

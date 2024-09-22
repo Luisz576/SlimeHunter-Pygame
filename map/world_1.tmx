@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="10">
  <tileset firstgid="1" source="Tileset_2.tsx"/>
  <tileset firstgid="16" source="Tileset_3.tsx"/>
  <layer id="1" name="floor" width="60" height="40">
@@ -90,4 +90,10 @@
 50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50
 </data>
  </layer>
+ <objectgroup id="3" name="collisions">
+  <object id="4" x="6.25" y="16" width="946.25" height="14.375"/>
+  <object id="7" x="0" y="31.5" width="8.25" height="592.25"/>
+  <object id="8" x="951.375" y="31.4063" width="8.25" height="592.25"/>
+  <object id="9" x="8.95833" y="617.563" width="941.5" height="14.375"/>
+ </objectgroup>
 </map>

@@ -1,6 +1,6 @@
 from game.settings import *
 from .map import Map
-from game.components import AllSpritesGroup
+from game.components import AllSpritesGroup, CollisionSpritesGroup
 from game.level.entity import Player, get_player_data, Players
 
 
@@ -15,14 +15,17 @@ class Level:
 
         # sprite groups
         self.all_sprites = AllSpritesGroup()
+        self.collision_sprites = CollisionSpritesGroup()
 
         # map
-        self.map = Map(map_path, map_layers, map_collision_layers, self.all_sprites)
+        self.map = Map(map_path, map_layers, map_collision_layers, self.all_sprites,
+                       collision_group=self.collision_sprites)
         # player
         self.player = Player(
             (random.randint(10, 600), random.randint(10, 600)),
             self.all_sprites,
-            get_player_data(Players.SOLDIER)
+            get_player_data(Players.SOLDIER),
+            self.collision_sprites
         )
 
     def run(self, delta):
@@ -34,4 +37,4 @@ class Level:
 
 def level_builder(level):
     if level == Levels.WORLD_1:
-        return Level(join('map', 'world_1.tmx'), ['floor', 'walls'], [])
+        return Level(join('map', 'world_1.tmx'), ['floor', 'walls'], ['collisions'])
