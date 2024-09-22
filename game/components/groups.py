@@ -2,7 +2,7 @@ from game.settings import *
 from game.components import FollowableSprite
 
 
-class AllSpritesGroup(pygame.sprite.Group):
+class RenderSpritesGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__(self)
         self.display_surface = pygame.display.get_surface()

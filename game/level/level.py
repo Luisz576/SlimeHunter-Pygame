@@ -1,7 +1,7 @@
 from game.settings import *
 from .map import Map
-from game.components import AllSpritesGroup, CollisionSpritesGroup
-from game.level.entity import Player, get_player_data, Players
+from game.components import RenderSpritesGroup, CollisionSpritesGroup
+from game.level.entity import Player, Players, Slime, Slimes
 
 
 class Levels(Enum):
@@ -14,25 +14,33 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         # sprite groups
-        self.all_sprites = AllSpritesGroup()
+        self.render_sprites = RenderSpritesGroup()
         self.collision_sprites = CollisionSpritesGroup()
 
         # map
-        self.map = Map(map_path, map_layers, map_collision_layers, self.all_sprites,
+        self.map = Map(map_path, map_layers, map_collision_layers, self.render_sprites,
                        collision_group=self.collision_sprites)
         # player
         self.player = Player(
             (random.randint(10, 600), random.randint(10, 600)),
-            self.all_sprites,
-            get_player_data(Players.SOLDIER),
-            self.collision_sprites
+            self.render_sprites,
+            self.collision_sprites,
+            Players.SOLDIER
+        )
+
+        # TODO: temp
+        Slime(
+            (random.randint(10, 600), random.randint(10, 600)),
+            self.render_sprites,
+            self.collision_sprites,
+            Slimes.NORMAL_SLIME
         )
 
     def run(self, delta):
         self.display_surface.fill(COLORS['black'])
         # sprites
-        self.all_sprites.draw(self.player.rect.center)
-        self.all_sprites.update(delta)
+        self.render_sprites.draw(self.player.rect.center)
+        self.render_sprites.update(delta)
 
 
 def level_builder(level):
