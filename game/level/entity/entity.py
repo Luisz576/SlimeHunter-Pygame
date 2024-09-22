@@ -13,8 +13,7 @@ class Entity(Sprite):
 
         # collision
         self.collision_group = collision_group
-        self.hitbox = self.rect.inflate(-self.rect.width/2, -self.rect.height/2)
-                                        # TODO: look here <- Maybe
+        self.hitbox = self.rect.inflate(-self.rect.width/2, -self.rect.width/4)
 
         # render
         self.flipped = False

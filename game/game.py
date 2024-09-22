@@ -1,6 +1,6 @@
 import pygame.time
 
-from .settings import *
+from game.settings import *
 from game.level import level_builder, Levels
 
 

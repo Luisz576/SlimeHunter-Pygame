@@ -22,7 +22,7 @@ class Level:
                        collision_group=self.collision_sprites)
         # player
         self.player = Player(
-            (200, 200),
+            (random.randint(10, 600), random.randint(10, 600)),
             self.all_sprites,
             get_player_data(Players.SOLDIER),
             self.collision_sprites
