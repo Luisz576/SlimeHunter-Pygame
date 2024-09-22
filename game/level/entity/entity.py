@@ -33,7 +33,6 @@ class Entity(Sprite):
     def _collisions(self, axis):
         for sprite in self.collision_group:
             if sprite.hitbox.colliderect(self.hitbox):
-                print("COLLISION", axis)
                 if axis == Axis.HORIZONTAL:
                     if self.velocity.x > 0:
                         self.hitbox.right = sprite.rect.left
@@ -52,11 +51,11 @@ class Entity(Sprite):
         if self.velocity.magnitude() > 0:
             self.velocity = self.velocity.normalize()
         # move x
-        self.rect.centerx = self.velocity.x * self.speed * delta
+        self.rect.centerx += self.velocity.x * self.speed * delta
         self.hitbox.centerx = self.rect.centerx
         self._collisions(Axis.HORIZONTAL)
         # move y
-        self.rect.centery = self.velocity.y * self.speed * delta
+        self.rect.centery += self.velocity.y * self.speed * delta
         self.hitbox.centery = self.rect.centery
         self._collisions(Axis.VERTICAL)
 
