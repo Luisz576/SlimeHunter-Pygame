@@ -7,7 +7,7 @@ class Sprite(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(center=pos) if use_rect_center else self.image.get_rect(topleft=pos)
         self.z = z
-        self.y_sort = self.rect.centery
+        self.y_sort = self.rect.bottom
         self.hitbox = self.rect.copy()
 
 

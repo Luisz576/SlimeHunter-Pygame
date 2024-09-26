@@ -41,6 +41,9 @@ def get_player_data(player_key):
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(2, 17)
             )
+            # scale
+            hash_player_data[player_key]["animations"]["idle"].scale_frames(2)
+            hash_player_data[player_key]["animations"]["walking"].scale_frames(2)
     # return data
     return hash_player_data[player_key]
 

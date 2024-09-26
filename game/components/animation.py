@@ -1,3 +1,6 @@
+from pygame.transform import scale
+
+
 class Animation:
     def __init__(self, frames):
         self.index = 0
@@ -22,6 +25,11 @@ class Animation:
 
     def frame(self):
         return self.frames[self.index]
+
+    def scale_frames(self, new_scale):
+        for i in range(self._size):
+            sprite_size = self.frames[i].get_size()
+            self.frames[i] = scale(self.frames[i], (sprite_size[0] * new_scale, sprite_size[1] * new_scale))
 
 
 class AnimationController:

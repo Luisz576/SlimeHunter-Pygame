@@ -41,6 +41,9 @@ def get_slime_data(slime):
                 shadow_path=None,
                 shadow_offset=None,
             )
+            # scale
+            hash_slime_data[slime]["animations"]["idle"].scale_frames(2)
+            hash_slime_data[slime]["animations"]["walking"].scale_frames(2)
     # return data
     return hash_slime_data[slime]
 
