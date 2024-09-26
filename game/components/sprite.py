@@ -1,3 +1,5 @@
+import pygame.transform
+
 from game.settings import *
 
 
@@ -9,6 +11,10 @@ class Sprite(pygame.sprite.Sprite):
         self.z = z
         self.y_sort = self.rect.bottom
         self.hitbox = self.rect.copy()
+
+    def scale(self, new_scale):
+        self.image = pygame.transform.scale(self.image, (self.rect.width * new_scale, self.rect.height * new_scale))
+        return self
 
 
 class FollowableSprite(Sprite):

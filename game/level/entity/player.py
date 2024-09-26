@@ -7,13 +7,14 @@ from game.components import FollowableSprite
 hash_player_data = {}
 
 
-def build_player_data(animations, start_animation_name, shadow_path, shadow_offset):
+def build_player_data(animations, start_animation_name, shadow_path, shadow_offset, shadow_scale=1):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
         "shadow": {
             "path": shadow_path,
-            "offset": shadow_offset
+            "offset": shadow_offset,
+            "scale": shadow_scale
         }
     }
 
@@ -39,11 +40,12 @@ def get_player_data(player_key):
                 ),
                 start_animation_name="idle",
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
-                shadow_offset=Vector2(2, 17)
+                shadow_offset=Vector2(6, 51),
+                shadow_scale=3
             )
             # scale
-            hash_player_data[player_key]["animations"]["idle"].scale_frames(2)
-            hash_player_data[player_key]["animations"]["walking"].scale_frames(2)
+            hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
+            hash_player_data[player_key]["animations"]["walking"].scale_frames(3)
     # return data
     return hash_player_data[player_key]
 
@@ -61,7 +63,8 @@ class Player(Entity):
             group,
             offset=player_data['shadow']['offset'],
             z=WorldLayers.SHADOW
-        ) if player_data['shadow']['path'] is not None else None
+        ).scale(player_data['shadow']['scale'] if player_data['shadow']['scale'] > 1 else 1)\
+            if player_data['shadow']['path'] is not None else None
 
     def _input(self):
         keys = pygame.key.get_pressed()

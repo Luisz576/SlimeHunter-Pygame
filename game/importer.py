@@ -1,5 +1,6 @@
 from game.components import Animation
 from game.settings import *
+from pygame.transform import scale
 
 
 def import_image(path, alpha=True):
@@ -7,7 +8,7 @@ def import_image(path, alpha=True):
     return surf
 
 
-def import_tilemap(cols, rows, path):
+def import_tilemap(cols, rows, path, tilemap_scale=1):
     frames = {}
     surf = import_image(path)
     cell_width, cell_height = surf.get_width() / cols, surf.get_height() / rows
@@ -18,7 +19,7 @@ def import_tilemap(cols, rows, path):
             cutout_surf.fill('green')
             cutout_surf.set_colorkey('green')
             cutout_surf.blit(surf, (0, 0), cutout_rect)
-            frames[(col, row)] = cutout_surf
+            frames[(col, row)] = scale(cutout_surf, (cell_width * tilemap_scale, cell_height * tilemap_scale))
     return frames
 
 
