@@ -47,15 +47,17 @@ class Entity(Sprite):
 
     def _move(self, delta):
         # normalizationws
-        if self.velocity.magnitude() > 0:
-            # self.velocity = self.velocity.normalize()
-            pass
+        #if self.velocity.magnitude() > 0:
+            #self.velocity = self.velocity.normalize()
+            #pass
         # move x
-        self.rect.centerx += (self.velocity.x * self.speed * delta)
+        move_x = (self.velocity.x * self.speed * delta)
+        self.rect.centerx = self.rect.centerx + move_x
         self.hitbox.centerx = self.rect.centerx
         self._collisions(Axis.HORIZONTAL)
         # move y
-        self.rect.centery += (self.velocity.y * self.speed * delta)
+        move_y = (self.velocity.y * self.speed * delta)
+        self.rect.centery = self.rect.centery + move_y
         self.hitbox.centery = self.rect.centery
         self._collisions(Axis.VERTICAL)
 

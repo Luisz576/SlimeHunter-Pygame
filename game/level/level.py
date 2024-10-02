@@ -29,12 +29,14 @@ class Level:
         )
 
         # TODO: temp
-        Slime(
-            (600, 600),
-            self.render_sprites,
-            self.collision_sprites,
-            Slimes.NORMAL_SLIME
-        ).target = self.player
+        for x in range(50):
+            for y in range(50):
+                Slime(
+                    (20 * x + 120, 20 * y + 120),
+                    self.render_sprites,
+                    self.collision_sprites,
+                    Slimes.NORMAL_SLIME
+                ).target = self.player
 
     def run(self, delta):
         self.display_surface.fill(COLORS['black'])

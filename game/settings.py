@@ -5,7 +5,7 @@ from enum import Enum
 from sys import exit
 from os.path import join
 
-GAME_NAME = "Dude Just Survive"
+GAME_NAME = "Slime Hunter"
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
