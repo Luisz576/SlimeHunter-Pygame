@@ -10,7 +10,7 @@ class Slimes(Enum):
 
 
 def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance,
-                     attack_damage, speed):
+                     attack_damage, speed, chasing_min_distance_to_change_direction):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -21,6 +21,7 @@ def build_slime_data(animations, start_animation_name, shadow_path, shadow_offse
         "attack_min_distance": attack_min_distance,
         "attack_damage": attack_damage,
         "speed": speed,
+        "chasing_min_distance_to_change_direction": chasing_min_distance_to_change_direction
     }
 
 
@@ -45,9 +46,11 @@ def get_slime_data(slime):
                 start_animation_name="idle",
                 shadow_path=None,
                 shadow_offset=None,
+                speed=160,
+                # ia
                 attack_damage=1,
                 attack_min_distance=80,
-                speed=160,
+                chasing_min_distance_to_change_direction=40,
             )
             # scale
             hash_slime_data[slime]["animations"]["idle"].scale_frames(3)
@@ -82,20 +85,19 @@ class Slime(Entity):
             if dis > self.slime_data["attack_min_distance"]:
                 # moviment
                 # move x
-                if dis_target[0] > 30:
+                if dis_target[0] > self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.x = 1
-                elif dis_target[0] < 30:
+                elif dis_target[0] < -self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.x = -1
                 # move y
-                if dis_target[1] > 30:
+                if dis_target[1] > self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.y = 1
-                elif dis_target[1] < 30:
+                elif dis_target[1] < -self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.y = -1
             else:
                 # attack
                 print("attack")
                 pass
-
 
     def update(self, delta):
         self._ia()
