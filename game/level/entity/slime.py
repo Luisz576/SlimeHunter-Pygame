@@ -1,6 +1,7 @@
 from game.settings import *
+from game.math import points_dis
 from game.components import FollowableSprite
-from game.level.entity import NPEntity
+from game.level.entity import Entity
 from game.importer import import_named_animations, import_image
 
 
@@ -8,14 +9,18 @@ class Slimes(Enum):
     NORMAL_SLIME = 1
 
 
-def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset):
+def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance,
+                     attack_damage, speed):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
         "shadow": {
             "path": shadow_path,
             "offset": shadow_offset
-        }
+        },
+        "attack_min_distance": attack_min_distance,
+        "attack_damage": attack_damage,
+        "speed": speed,
     }
 
 
@@ -40,6 +45,9 @@ def get_slime_data(slime):
                 start_animation_name="idle",
                 shadow_path=None,
                 shadow_offset=None,
+                attack_damage=1,
+                attack_min_distance=80,
+                speed=160,
             )
             # scale
             hash_slime_data[slime]["animations"]["idle"].scale_frames(3)
@@ -48,28 +56,50 @@ def get_slime_data(slime):
     return hash_slime_data[slime]
 
 
-class Slime(NPEntity):
+class Slime(Entity):
     def __init__(self, pos, group, collision_group, slime_data_type):
+        # target
+        self.target = None
         # get slime data
-        slime_data = get_slime_data(slime_data_type)
+        self.slime_data = get_slime_data(slime_data_type)
         # super
-        super().__init__(pos, group, collision_group, slime_data['animations'], slime_data['start_animation_name'])
-        # goals
-        self._register_goals()
+        super().__init__(pos, self.slime_data["speed"], group, collision_group, self.slime_data['animations'], self.slime_data['start_animation_name'])
         # shadow
         self.shadow = FollowableSprite(
-            import_image(slime_data['shadow']['path']),
+            import_image(self.slime_data['shadow']['path']),
             self,
             group,
-            offset=slime_data['shadow']['offset'],
+            offset=self.slime_data['shadow']['offset'],
             z=WorldLayers.SHADOW
-        ) if slime_data['shadow']['path'] is not None else None
+        ) if self.slime_data['shadow']['path'] is not None else None
 
-    def _register_goals(self):
-        # self._register_goal(goal)
-        pass
+    def _ia(self):
+        self.velocity.x = 0
+        self.velocity.y = 0
+        if self.target is not None:
+            dis_target = (self.target.rect.x - self.rect.x, self.target.rect.y - self.rect.y)
+            dis = points_dis((self.target.rect.x, self.target.rect.y), (self.rect.x, self.rect.y))
+            if dis > self.slime_data["attack_min_distance"]:
+                # moviment
+                # move x
+                if dis_target[0] > 30:
+                    self.velocity.x = 1
+                elif dis_target[0] < 30:
+                    self.velocity.x = -1
+                # move y
+                if dis_target[1] > 30:
+                    self.velocity.y = 1
+                elif dis_target[1] < 30:
+                    self.velocity.y = -1
+            else:
+                # attack
+                print("attack")
+                pass
+
 
     def update(self, delta):
+        self._ia()
+
         # animation
         if self.is_moving():
             self.animation_controller.change("walking")

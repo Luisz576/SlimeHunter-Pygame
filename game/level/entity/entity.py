@@ -3,7 +3,7 @@ from game.settings import *
 
 
 class Entity(Sprite):
-    def __init__(self, pos, group, collision_group, animations, start_animation_name):
+    def __init__(self, pos, speed, group, collision_group, animations, start_animation_name):
         # animations
         self.animation_controller = AnimationController(animations, start_animation_name)
         self.animation_controller.play()
@@ -19,7 +19,7 @@ class Entity(Sprite):
         self.flipped = False
 
         # attributes
-        self.speed = 200
+        self.speed = speed
         self.velocity = pygame.math.Vector2(0, 0)
 
     def _animate(self, delta):
@@ -48,13 +48,14 @@ class Entity(Sprite):
     def _move(self, delta):
         # normalizationws
         if self.velocity.magnitude() > 0:
-            self.velocity = self.velocity.normalize()
+            # self.velocity = self.velocity.normalize()
+            pass
         # move x
-        self.rect.centerx += self.velocity.x * self.speed * delta
+        self.rect.centerx += (self.velocity.x * self.speed * delta)
         self.hitbox.centerx = self.rect.centerx
         self._collisions(Axis.HORIZONTAL)
         # move y
-        self.rect.centery += self.velocity.y * self.speed * delta
+        self.rect.centery += (self.velocity.y * self.speed * delta)
         self.hitbox.centery = self.rect.centery
         self._collisions(Axis.VERTICAL)
 

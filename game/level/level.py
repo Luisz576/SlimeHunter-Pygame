@@ -22,7 +22,7 @@ class Level:
                        collision_group=self.collision_sprites, tile_scale=tile_scale)
         # player
         self.player = Player(
-            (300, 300),
+            (400, 400),
             self.render_sprites,
             self.collision_sprites,
             Players.SOLDIER
@@ -34,7 +34,7 @@ class Level:
             self.render_sprites,
             self.collision_sprites,
             Slimes.NORMAL_SLIME
-        )
+        ).target = self.player
 
     def run(self, delta):
         self.display_surface.fill(COLORS['black'])

@@ -7,7 +7,7 @@ from game.components import FollowableSprite
 hash_player_data = {}
 
 
-def build_player_data(animations, start_animation_name, shadow_path, shadow_offset, shadow_scale=1):
+def build_player_data(animations, start_animation_name, shadow_path, shadow_offset, speed, shadow_scale=1):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -15,7 +15,8 @@ def build_player_data(animations, start_animation_name, shadow_path, shadow_offs
             "path": shadow_path,
             "offset": shadow_offset,
             "scale": shadow_scale
-        }
+        },
+        "speed": speed
     }
 
 
@@ -41,7 +42,8 @@ def get_player_data(player_key):
                 start_animation_name="idle",
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(6, 51),
-                shadow_scale=3
+                shadow_scale=3,
+                speed=200,
             )
             # scale
             hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
@@ -53,18 +55,18 @@ def get_player_data(player_key):
 class Player(Entity):
     def __init__(self, pos, group, collision_group, player_data_type):
         # get data
-        player_data = get_player_data(player_data_type)
+        self.player_data = get_player_data(player_data_type)
         # super
-        super().__init__(pos, group, collision_group, player_data['animations'], player_data['start_animation_name'])
+        super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'], self.player_data['start_animation_name'])
         # shadow
         self.shadow = FollowableSprite(
-            import_image(player_data['shadow']['path']),
+            import_image(self.player_data['shadow']['path']),
             self,
             group,
-            offset=player_data['shadow']['offset'],
+            offset=self.player_data['shadow']['offset'],
             z=WorldLayers.SHADOW
-        ).scale(player_data['shadow']['scale'] if player_data['shadow']['scale'] > 1 else 1)\
-            if player_data['shadow']['path'] is not None else None
+        ).scale(self.player_data['shadow']['scale'] if self.player_data['shadow']['scale'] > 1 else 1)\
+            if self.player_data['shadow']['path'] is not None else None
 
     def _input(self):
         keys = pygame.key.get_pressed()
