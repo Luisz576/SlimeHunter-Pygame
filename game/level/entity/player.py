@@ -1,13 +1,13 @@
 from game.settings import *
 from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
-from game.components import FollowableSprite
+from game.components import FollowableSprite, Health
 
 
 hash_player_data = {}
 
 
-def build_player_data(animations, start_animation_name, shadow_path, shadow_offset, speed, shadow_scale=1):
+def build_player_data(animations, start_animation_name, shadow_path, max_health, shadow_offset, speed, shadow_scale=1):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -16,7 +16,8 @@ def build_player_data(animations, start_animation_name, shadow_path, shadow_offs
             "offset": shadow_offset,
             "scale": shadow_scale
         },
-        "speed": speed
+        "speed": speed,
+        "max_health": max_health
     }
 
 
@@ -39,6 +40,7 @@ def get_player_data(player_key):
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Walk.png'),
                     ]
                 ),
+                max_health = 6,
                 start_animation_name="idle",
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(6, 51),
@@ -58,6 +60,8 @@ class Player(Entity):
         self.player_data = get_player_data(player_data_type)
         # super
         super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'], self.player_data['start_animation_name'])
+        # health
+        self.health = Health(self.player_data["max_health"])
         # shadow
         self.shadow = FollowableSprite(
             import_image(self.player_data['shadow']['path']),

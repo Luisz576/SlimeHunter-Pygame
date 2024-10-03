@@ -49,8 +49,8 @@ def get_slime_data(slime):
                 speed=160,
                 # ia
                 attack_damage=1,
-                attack_min_distance=80,
-                chasing_min_distance_to_change_direction=40,
+                attack_min_distance=40,
+                chasing_min_distance_to_change_direction=100,
             )
             # scale
             hash_slime_data[slime]["animations"]["idle"].scale_frames(3)
@@ -87,12 +87,12 @@ class Slime(Entity):
                 # move x
                 if dis_target[0] > self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.x = 1
-                elif dis_target[0] < -self.slime_data["chasing_min_distance_to_change_direction"]:
+                elif dis_target[0] < -1 * self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.x = -1
                 # move y
                 if dis_target[1] > self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.y = 1
-                elif dis_target[1] < -self.slime_data["chasing_min_distance_to_change_direction"]:
+                elif dis_target[1] < -1 * self.slime_data["chasing_min_distance_to_change_direction"]:
                     self.velocity.y = -1
             else:
                 # attack

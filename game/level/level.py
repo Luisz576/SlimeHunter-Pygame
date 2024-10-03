@@ -1,4 +1,5 @@
 from game.settings import *
+from game.level.hud import Hud
 from .map import Map
 from game.components import RenderSpritesGroup, CollisionSpritesGroup
 from game.level.entity import Player, Players, Slime, Slimes
@@ -20,6 +21,7 @@ class Level:
         # map
         self.map = Map(map_path, map_layers, map_collision_layers, self.render_sprites,
                        collision_group=self.collision_sprites, tile_scale=tile_scale)
+        self.enemies = []
         # player
         self.player = Player(
             (400, 400),
@@ -27,22 +29,29 @@ class Level:
             self.collision_sprites,
             Players.SOLDIER
         )
-
-        # TODO: temp
-        for x in range(50):
-            for y in range(50):
-                Slime(
-                    (20 * x + 120, 20 * y + 120),
-                    self.render_sprites,
-                    self.collision_sprites,
-                    Slimes.NORMAL_SLIME
-                ).target = self.player
+        # hud
+        self.hud = Hud(self)
 
     def run(self, delta):
         self.display_surface.fill(COLORS['black'])
+        self.spawner()
+        self.hud.update(delta)
         # sprites
         self.render_sprites.draw(self.player.rect.center)
         self.render_sprites.update(delta)
+        self.hud.draw()
+
+    def spawner(self):
+        # TODO: Slime aleatório
+        if random.random() < 0.001:
+            enemy = Slime(
+                (random.randint(200, 2000), random.randint(200, 1800)),
+                self.render_sprites,
+                self.collision_sprites,
+                Slimes.NORMAL_SLIME
+            )
+            enemy.target = self.player
+            self.enemies.append(enemy)
 
 
 def level_builder(level):
