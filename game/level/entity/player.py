@@ -34,22 +34,25 @@ def get_player_data(player_key):
                     [
                         (6, 1, "idle"),
                         (8, 1, "walking"),
+                        (6, 1, "attacking"),
                     ],
                     [
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Idle.png'),
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Walk.png'),
+                        join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Attack01.png'),
                     ]
                 ),
-                max_health = 6,
+                max_health=6,
                 start_animation_name="idle",
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
-                shadow_offset=Vector2(6, 51),
+                shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
                 speed=200,
             )
             # scale
             hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
             hash_player_data[player_key]["animations"]["walking"].scale_frames(3)
+            hash_player_data[player_key]["animations"]["attacking"].scale_frames(3)
     # return data
     return hash_player_data[player_key]
 
@@ -97,7 +100,10 @@ class Player(Entity):
         if self.is_moving():
             self.animation_controller.change("walking")
         else:
-            self.animation_controller.change("idle")
+            if self.is_attacking():
+                self.animation_controller.change("attacking")
+            else:
+                self.animation_controller.change("idle")
 
         if self.velocity.x != 0:
             self.flipped = self.velocity.x < 0

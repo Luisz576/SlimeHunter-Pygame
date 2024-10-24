@@ -37,10 +37,12 @@ def get_slime_data(slime):
                     [
                         (4, 1, "idle"),
                         (4, 1, "walking"),
+                        # (4, 1, "attacking"),
                     ],
                     [
                         join('assets', 'characters', 'Slime', 'Slime-Idle.png'),
                         join('assets', 'characters', 'Slime', 'Slime-Walking.png'),
+                        # join('assets', 'characters', 'Slime', 'Slime-Attacking.png'),
                     ]
                 ),
                 start_animation_name="idle",

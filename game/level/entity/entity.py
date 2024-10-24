@@ -21,6 +21,11 @@ class Entity(Sprite):
         # attributes
         self.speed = speed
         self.velocity = pygame.math.Vector2(0, 0)
+        # attacking
+        self.attacking = False
+
+    def is_attacking(self):
+        return self.attacking
 
     def _animate(self, delta):
         self.animation_controller.update(delta)
