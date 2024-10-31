@@ -121,7 +121,7 @@ class Player(Entity):
                 self.attacking = True
 
     def __attack_give_damage_handler(self):
-        pass
+        pass # TODO:
 
     def update(self, delta):
         self._input()
