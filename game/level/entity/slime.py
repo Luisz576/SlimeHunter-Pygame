@@ -98,8 +98,11 @@ class Slime(Entity):
                     self.velocity.y = -1
             else:
                 # attack
-                print("attack")
+                self._attack_hanlder()
                 pass
+
+    def _attack_hanlder(self):
+        print(f"{self} - attack")
 
     def update(self, delta):
         self._ia()

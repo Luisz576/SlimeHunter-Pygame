@@ -116,7 +116,7 @@ class Player(Entity):
             self._attack_input_handler()
 
     def _attack_input_handler(self):
-        if not self.is_attacking():
+        if not self.is_attacking() and not self.is_moving():
             if self.can_attack:
                 self.attacking = True
 
