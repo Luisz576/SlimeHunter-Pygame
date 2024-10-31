@@ -89,6 +89,9 @@ class Player(Entity):
     def __attack_handler(self, event, animation):
         if event == AnimationEvent.ENDS:
             self.attacking = False
+        elif event == AnimationEvent.FRAME_CHANGED:
+            if animation.index == 3:
+                self.__attack_give_damage_handler()
 
     def _input(self):
         keys = pygame.key.get_pressed()
@@ -110,12 +113,15 @@ class Player(Entity):
 
         # attack
         if keys[pygame.K_SPACE]:
-            self._attack_handler()
+            self._attack_input_handler()
 
-    def _attack_handler(self):
+    def _attack_input_handler(self):
         if not self.is_attacking():
             if self.can_attack:
                 self.attacking = True
+
+    def __attack_give_damage_handler(self):
+        pass
 
     def update(self, delta):
         self._input()
