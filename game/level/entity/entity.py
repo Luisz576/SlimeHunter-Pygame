@@ -23,6 +23,7 @@ class Entity(Sprite):
         self.velocity = pygame.math.Vector2(0, 0)
         # attacking
         self.attacking = False
+        self.can_attack = True
 
     def is_attacking(self):
         return self.attacking

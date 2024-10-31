@@ -2,6 +2,7 @@ from game.settings import *
 from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
 from game.components import FollowableSprite, Health
+from game.components.animation import AnimationEvent
 
 
 hash_player_data = {}
@@ -53,6 +54,7 @@ def get_player_data(player_key):
             hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
             hash_player_data[player_key]["animations"]["walking"].scale_frames(3)
             hash_player_data[player_key]["animations"]["attacking"].scale_frames(3)
+            hash_player_data[player_key]["animations"]["attacking"].speed = 15
     # return data
     return hash_player_data[player_key]
 
@@ -62,7 +64,8 @@ class Player(Entity):
         # get data
         self.player_data = get_player_data(player_data_type)
         # super
-        super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'], self.player_data['start_animation_name'])
+        super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'],
+                         self.player_data['start_animation_name'])
         # health
         self.health = Health(self.player_data["max_health"])
         # shadow
@@ -74,6 +77,18 @@ class Player(Entity):
             z=WorldLayers.SHADOW
         ).scale(self.player_data['shadow']['scale'] if self.player_data['shadow']['scale'] > 1 else 1)\
             if self.player_data['shadow']['path'] is not None else None
+        # register listener
+        self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
+        self.player_data["animations"]["attacking"].set_listener("attack_listener", self.__attack_handler)
+
+    def __animations_handler(self, event, animation, animation_controller):
+        if event == AnimationEvent.ANIMATION_CHANGED:
+            if self.animation_controller.current_animation != "attacking":
+                self.attacking = False
+
+    def __attack_handler(self, event, animation):
+        if event == AnimationEvent.ENDS:
+            self.attacking = False
 
     def _input(self):
         keys = pygame.key.get_pressed()
@@ -92,6 +107,15 @@ class Player(Entity):
             self.velocity.x = 1
         else:
             self.velocity.x = 0
+
+        # attack
+        if keys[pygame.K_SPACE]:
+            self._attack_handler()
+
+    def _attack_handler(self):
+        if not self.is_attacking():
+            if self.can_attack:
+                self.attacking = True
 
     def update(self, delta):
         self._input()
