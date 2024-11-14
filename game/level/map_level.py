@@ -8,8 +8,8 @@ from game.ui import PauseScreen
 
 
 class MapLevel(Level):
-    def __init__(self, map_path, map_layers, map_collision_layers, tile_scale):
-        super().__init__()
+    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale):
+        super().__init__(game)
         # init
         self.pause_screen = None
 

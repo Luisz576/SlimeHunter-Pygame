@@ -20,8 +20,8 @@ class Game:
         # level
         self.load_level()
 
-    def load_level(self):
-        self.level = level_builder(Levels.MENU)
+    def load_level(self, level=Levels.MENU):
+        self.level = level_builder(level, self)
 
     def run(self):
         if self.level is None:

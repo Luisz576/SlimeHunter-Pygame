@@ -1,5 +1,6 @@
 from .level import Level
-from .map_level import MapLevel
+from .levels import Levels
 from .menu_level import MenuLevel
+from .map_level import MapLevel
 from .monster_level import MonsterLevel
-from .levels import Levels, level_builder
+from .level_builder import level_builder

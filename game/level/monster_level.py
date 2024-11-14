@@ -4,8 +4,8 @@ from game.level.entity import Slime, Slimes
 
 
 class MonsterLevel(MapLevel):
-    def __init__(self, map_path, map_layers, map_collision_layers, tile_scale):
-        super().__init__(map_path, map_layers, map_collision_layers, tile_scale)
+    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale):
+        super().__init__(game, map_path, map_layers, map_collision_layers, tile_scale)
 
     def _update(self, delta):
         self.spawner()
