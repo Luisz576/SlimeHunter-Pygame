@@ -5,7 +5,8 @@ class PauseScreen:
     def _input(self):
         pass
 
-    def run(self, delta):
+    def update(self, delta):
         self._input()
 
-        # TODO: render
+    def render(self, delta):
+        pass
