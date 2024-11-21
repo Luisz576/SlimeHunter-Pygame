@@ -5,10 +5,12 @@ from enum import Enum
 from sys import exit
 from os.path import join
 
+pygame.font.init()
+
 GAME_NAME = "Slime Hunter"
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
 
 TILE_SIZE = 16
 
