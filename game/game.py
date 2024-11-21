@@ -1,3 +1,5 @@
+import sys
+
 import pygame.time
 
 from game.settings import *
@@ -41,3 +43,6 @@ class Game:
             self.level.run(delta)
             pygame.display.update()
             # print(f"FPS: {self.clock.get_fps()}")
+
+    def quit(self):
+        sys.exit()

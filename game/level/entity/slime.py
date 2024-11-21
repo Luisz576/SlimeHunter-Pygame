@@ -48,11 +48,11 @@ def get_slime_data(slime):
                 start_animation_name="idle",
                 shadow_path=None,
                 shadow_offset=None,
-                speed=160,
+                speed=170,
                 # ia
                 attack_damage=1,
                 attack_min_distance=40,
-                chasing_min_distance_to_change_direction=100,
+                chasing_min_distance_to_change_direction=20,
             )
             # scale
             hash_slime_data[slime]["animations"]["idle"].scale_frames(3)
@@ -99,7 +99,6 @@ class Slime(Entity):
             else:
                 # attack
                 self._attack_hanlder()
-                pass
 
     def _attack_hanlder(self):
         print(f"{self} - attack")

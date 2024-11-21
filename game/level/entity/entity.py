@@ -55,7 +55,6 @@ class Entity(Sprite):
         # normalizationws
         #if self.velocity.magnitude() > 0:
             #self.velocity = self.velocity.normalize()
-            #pass
         # move x
         move_x = (self.velocity.x * self.speed * delta)
         self.rect.centerx = self.rect.centerx + move_x

@@ -3,6 +3,7 @@ from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
 from game.components import FollowableSprite, Health
 from game.components.animation import AnimationEvent
+from game.level.inventory import PlayerInventory
 
 
 hash_player_data = {}
@@ -48,7 +49,7 @@ def get_player_data(player_key):
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
-                speed=200,
+                speed=300,
             )
             # scale
             hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
@@ -66,6 +67,8 @@ class Player(Entity):
         # super
         super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'],
                          self.player_data['start_animation_name'])
+        # player inventory
+        self.inventory = PlayerInventory()
         # health
         self.health = Health(self.player_data["max_health"])
         # shadow
@@ -121,7 +124,7 @@ class Player(Entity):
                 self.attacking = True
 
     def __attack_give_damage_handler(self):
-        pass # TODO:
+        print("Dano")
 
     def update(self, delta):
         self._input()
