@@ -2,7 +2,7 @@ from game.settings import *
 from game.level import Level
 from game.level.hud import Hud
 from .map import Map
-from game.components import RenderSpritesGroup, CollisionSpritesGroup
+from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGroup
 from game.level.entity import Player, Players
 from game.ui import PauseScreen
 
@@ -25,10 +25,13 @@ class MapLevel(Level):
                        collision_group=self.collision_sprites, tile_scale=tile_scale)
         self.enemies = []
         # player
+        self.enemy_group = EnemyGroup()
         self.player = Player(
+            self.game,
             (400, 400),
             self.render_sprites,
             self.collision_sprites,
+            self.enemy_group,
             Players.SOLDIER
         )
         # hud

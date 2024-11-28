@@ -2,6 +2,10 @@ from game.settings import *
 from game.components import FollowableSprite
 
 
+class EnemyGroup(pygame.sprite.Group):
+    pass
+
+
 class RenderSpritesGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__(self)

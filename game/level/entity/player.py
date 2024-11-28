@@ -1,3 +1,6 @@
+from pygame import Surface
+
+from game.level.attack import AttackArea
 from game.settings import *
 from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
@@ -9,7 +12,7 @@ from game.level.inventory import PlayerInventory
 hash_player_data = {}
 
 
-def build_player_data(animations, start_animation_name, shadow_path, max_health, shadow_offset, speed, shadow_scale=1):
+def build_player_data(animations, start_animation_name, shadow_path, max_health, shadow_offset, speed, attack_range, base_attack_damage, shadow_scale=1):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -19,7 +22,9 @@ def build_player_data(animations, start_animation_name, shadow_path, max_health,
             "scale": shadow_scale
         },
         "speed": speed,
-        "max_health": max_health
+        "max_health": max_health,
+        "attack_range": attack_range,
+        "base_attack_damage": base_attack_damage
     }
 
 
@@ -50,6 +55,8 @@ def get_player_data(player_key):
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
                 speed=300,
+                attack_range=(50, 50),
+                base_attack_damage=2,
             )
             # scale
             hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
@@ -61,12 +68,17 @@ def get_player_data(player_key):
 
 
 class Player(Entity):
-    def __init__(self, pos, group, collision_group, player_data_type):
+    def __init__(self, game, pos, group, collision_group, enemy_group, player_data_type):
+        self.game = game
+        self.enemy_group = enemy_group
         # get data
         self.player_data = get_player_data(player_data_type)
         # super
         super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'],
                          self.player_data['start_animation_name'])
+        # attack
+        self.base_attack_damage = self.player_data['base_attack_damage']
+        self.attack_range = self.player_data['attack_range']
         # player inventory
         self.inventory = PlayerInventory()
         # health
@@ -83,6 +95,9 @@ class Player(Entity):
         # register listener
         self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
         self.player_data["animations"]["attacking"].set_listener("attack_listener", self.__attack_handler)
+
+    def attack_damage(self):
+        return self.base_attack_damage # + inventory....
 
     def __animations_handler(self, event, animation, animation_controller):
         if event == AnimationEvent.ANIMATION_CHANGED:
@@ -124,7 +139,18 @@ class Player(Entity):
                 self.attacking = True
 
     def __attack_give_damage_handler(self):
-        print("Dano")
+        if self.flipped:
+            AttackArea(self.attack_damage(),
+                (self.rect.x, self.rect.y),
+                (-self.attack_range[0], self.attack_range[1]),
+                self.enemy_group
+            )
+        else:
+            AttackArea(self.attack_damage(),
+                (self.rect.x, self.rect.y),
+                self.attack_range,
+                self.enemy_group
+            )
 
     def update(self, delta):
         self._input()

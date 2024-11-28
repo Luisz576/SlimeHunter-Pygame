@@ -101,7 +101,10 @@ class Slime(Entity):
                 self._attack_hanlder()
 
     def _attack_hanlder(self):
-        print(f"{self} - attack")
+        # TODO: start attack animation
+        # TODO: subscribe animation attack
+        # TODO: create func attack_damage and spawn AttackArea
+        pass
 
     def update(self, delta):
         self._ia()

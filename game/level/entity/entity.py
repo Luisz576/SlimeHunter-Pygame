@@ -32,6 +32,9 @@ class Entity(Sprite):
         self.animation_controller.update(delta)
         self.image = pygame.transform.flip(self.animation_controller.frame(), self.flipped, False)
 
+    def give_damage(self, damage):
+        print(f"Receive damage: {damage}")
+
     def is_moving(self):
         return self.velocity.x != 0 or self.velocity.y != 0
 

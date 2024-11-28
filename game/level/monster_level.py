@@ -20,7 +20,7 @@ class MonsterLevel(MapLevel):
             enemy = Slime(
                 # (random.randint(200, 2000), random.randint(200, 1800)),
                 (600, 600),
-                self.render_sprites,
+                [self.render_sprites, self.enemy_group],
                 self.collision_sprites,
                 Slimes.NORMAL_SLIME
             )

@@ -31,7 +31,8 @@ class WorldLayers(Enum):
     SHADOW = 3
     ITEM = 4
     ENTITY = 5
-    AIR = 6
+    ATTACK=6
+    AIR = 7
 
 
 def WorldLayersValues():
