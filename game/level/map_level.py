@@ -1,10 +1,9 @@
 from game.settings import *
 from game.level import Level
-from game.level.hud import Hud
 from .map import Map
 from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGroup
 from game.level.entity import Player, Players
-from game.ui import PauseScreen
+from game.ui import PauseScreen, GameHud
 
 
 class MapLevel(Level):
@@ -12,6 +11,7 @@ class MapLevel(Level):
         super().__init__(game)
         # init
         self.pause_screen = None
+        self.game_hud = None
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
@@ -34,8 +34,6 @@ class MapLevel(Level):
             self.enemy_group,
             Players.SOLDIER
         )
-        # hud
-        self.hud = Hud(self)
 
         # pause
         self.paused = False
@@ -43,6 +41,10 @@ class MapLevel(Level):
         self.load_pause_screen()
         if self.pause_screen is None:
             raise Exception("Pause screen not loaded!")
+
+        self.load_game_hud()
+        if self.game_hud is None:
+            raise Exception("Game hud not loaded!")
 
     def kill_entity(self, entity):
         for enemy in self.enemies:
@@ -53,8 +55,10 @@ class MapLevel(Level):
     def load_pause_screen(self):
         self.pause_screen = PauseScreen(self.game)
 
+    def load_game_hud(self):
+        self.game_hud = GameHud(self.game)
+
     def _input(self, delta):
-        # TODO: FIX PRESS (IF YOU PRESS SO MUCH IT PAUSE AND UNPAUSE)
         keys = pygame.key.get_pressed()
 
         # pause
@@ -71,7 +75,7 @@ class MapLevel(Level):
         if self.paused:
             self.pause_screen.update(delta)
         else:
-            self._update(delta)
+            self.game_hud.update(delta)
         # clear
         self.display_surface.fill(COLORS['black'])
         # sprites
@@ -80,10 +84,6 @@ class MapLevel(Level):
         else:
             self._render(delta)
 
-    def _update(self, delta):
-        self.hud.update(delta)
-
     def _render(self, delta):
         self.render_sprites.draw(self.player.rect.center)
         self.render_sprites.update(delta)
-        self.hud.draw()
