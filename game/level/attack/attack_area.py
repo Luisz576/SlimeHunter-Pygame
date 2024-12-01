@@ -25,13 +25,10 @@ class AttackArea:
 
         attack_pos_y_a = self.pos[1] - self.attack_range[1]
         attack_pos_y_b = self.pos[1] + self.attack_range[1]
-        if attack_pos_y_b < attack_pos_x_a:
+        if attack_pos_y_b < attack_pos_y_a:
             aux_y = attack_pos_y_b
             attack_pos_y_b = attack_pos_y_a
             attack_pos_y_a = aux_y
-
-        print(f"tx: {tx} / ty: {ty} / {attack_pos_x_a} / {attack_pos_x_b} / {attack_pos_y_a} / {attack_pos_y_b}")
-        print(f"{(attack_pos_x_a <= tx <= attack_pos_x_b)} && {(attack_pos_y_a <= ty <= attack_pos_y_b)} = {(attack_pos_x_a <= tx <= attack_pos_x_b) and (attack_pos_y_a <= ty <= attack_pos_y_b)}");
 
         return (attack_pos_x_a <= tx <= attack_pos_x_b) and (attack_pos_y_a <= ty <= attack_pos_y_b)
 
