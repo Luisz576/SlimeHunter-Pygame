@@ -39,6 +39,7 @@ class MapLevel(Level):
 
         # pause
         self.paused = False
+        self.paused_delay = 0
         self.load_pause_screen()
         if self.pause_screen is None:
             raise Exception("Pause screen not loaded!")
@@ -50,19 +51,22 @@ class MapLevel(Level):
                 return
 
     def load_pause_screen(self):
-        self.pause_screen = PauseScreen(self)
+        self.pause_screen = PauseScreen(self.game)
 
-    def _input(self):
+    def _input(self, delta):
         # TODO: FIX PRESS (IF YOU PRESS SO MUCH IT PAUSE AND UNPAUSE)
         keys = pygame.key.get_pressed()
 
         # pause
-        if keys[pygame.K_ESCAPE]:
+        if self.paused_delay > 0:
+            self.paused_delay -= delta
+        if keys[pygame.K_ESCAPE] and self.paused_delay <= 0:
             self.paused = not self.paused
+            self.paused_delay = 0.2
 
     def run(self, delta):
         # input
-        self._input()
+        self._input(delta)
         # update
         if self.paused:
             self.pause_screen.update(delta)
