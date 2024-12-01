@@ -43,6 +43,12 @@ class MapLevel(Level):
         if self.pause_screen is None:
             raise Exception("Pause screen not loaded!")
 
+    def kill_entity(self, entity):
+        for enemy in self.enemies:
+            if enemy.uuid == entity.uuid:
+                self.enemies.remove(enemy)
+                return
+
     def load_pause_screen(self):
         self.pause_screen = PauseScreen(self)
 

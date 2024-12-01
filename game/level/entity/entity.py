@@ -1,9 +1,13 @@
 from game.components import AnimationController, Sprite
 from game.settings import *
+import uuid
 
 
 class Entity(Sprite):
-    def __init__(self, pos, speed, group, collision_group, animations, start_animation_name):
+    def __init__(self, game, pos, speed, group, collision_group, animations, start_animation_name):
+        self.game = game
+        self.uuid = uuid.uuid4()
+
         # animations
         self.animation_controller = AnimationController(animations, start_animation_name)
         self.animation_controller.play()
@@ -21,9 +25,17 @@ class Entity(Sprite):
         # attributes
         self.speed = speed
         self.velocity = pygame.math.Vector2(0, 0)
+        self.damage_delay = 1
         # attacking
         self.attacking = False
         self.can_attack = True
+        # damage
+        self.receiving_damage = False
+        self.removed = False
+
+    def kill_entity(self):
+        self.game.level.kill_entity(self)
+        self.kill()
 
     def is_attacking(self):
         return self.attacking
@@ -33,7 +45,7 @@ class Entity(Sprite):
         self.image = pygame.transform.flip(self.animation_controller.frame(), self.flipped, False)
 
     def give_damage(self, damage):
-        print(f"Receive damage: {damage}")
+        print(f"[NOT IMPLEMENTED] Receive damage: {damage}")
 
     def is_moving(self):
         return self.velocity.x != 0 or self.velocity.y != 0
@@ -70,6 +82,7 @@ class Entity(Sprite):
         self._collisions(Axis.VERTICAL)
 
     def update(self, delta):
-        self._move(delta)
+        if not self.receiving_damage:
+            self._move(delta)
         self.y_sort = self.rect.bottom
         self._animate(delta)

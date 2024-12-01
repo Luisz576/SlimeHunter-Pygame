@@ -69,12 +69,11 @@ def get_player_data(player_key):
 
 class Player(Entity):
     def __init__(self, game, pos, group, collision_group, enemy_group, player_data_type):
-        self.game = game
         self.enemy_group = enemy_group
         # get data
         self.player_data = get_player_data(player_data_type)
         # super
-        super().__init__(pos, self.player_data["speed"], group, collision_group, self.player_data['animations'],
+        super().__init__(game, pos, self.player_data["speed"], group, collision_group, self.player_data['animations'],
                          self.player_data['start_animation_name'])
         # attack
         self.base_attack_damage = self.player_data['base_attack_damage']
@@ -152,9 +151,7 @@ class Player(Entity):
                 self.enemy_group
             )
 
-    def update(self, delta):
-        self._input()
-
+    def _animate(self, delta):
         # animation
         if self.is_moving():
             self.animation_controller.change("walking")
@@ -164,7 +161,12 @@ class Player(Entity):
             else:
                 self.animation_controller.change("idle")
 
+        # flip
         if self.velocity.x != 0:
             self.flipped = self.velocity.x < 0
 
+        super()._animate(delta)
+
+    def update(self, delta):
+        self._input()
         super().update(delta)

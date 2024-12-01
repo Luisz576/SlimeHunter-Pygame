@@ -18,6 +18,7 @@ class MonsterLevel(MapLevel):
         if self.TEMP:
             self.TEMP = False
             enemy = Slime(
+                self.game,
                 # (random.randint(200, 2000), random.randint(200, 1800)),
                 (600, 600),
                 [self.render_sprites, self.enemy_group],

@@ -10,7 +10,7 @@ class AnimationEvent(Enum):
 
 
 class Animation:
-    def __init__(self, frames, speed=None):
+    def __init__(self, frames, speed=4):
         self.index = 0
         self.frames = frames
         self.speed = speed
@@ -59,14 +59,14 @@ class Animation:
 class AnimationController:
     _ANIMATION_LISTENER_KEY = "__animation_controller__"
 
-    def __init__(self, animations, start_animation_name, speed=4, stopped=True):
+    def __init__(self, animations, start_animation_name, stopped=True):
         # animations
         self.animations = animations
         # listeners
         for anim in animations:
             animations[anim].set_listener(AnimationController._ANIMATION_LISTENER_KEY, self.__listener_handler)
         # configs
-        self.speed = speed
+        self.speed = 0
         self.current_animation = start_animation_name
         self._stopped = stopped
         self._animation_delta_frame = 0
@@ -113,10 +113,7 @@ class AnimationController:
     def update(self, delta):
         if self._stopped:
             return
-        animation_speed = self.animation().speed
-        if animation_speed is None:
-            animation_speed = self.speed
-        self._animation_delta_frame += animation_speed * delta
+        self._animation_delta_frame += self.animation().speed * delta
         if self._animation_delta_frame > 1:
             self._animation_delta_frame = 0
             self.next_frame()

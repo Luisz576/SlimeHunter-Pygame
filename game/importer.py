@@ -38,19 +38,21 @@ def import_frames(cols, rows, path):
     return frames
 
 
-def import_animation(cols, rows, path):
-    return Animation(import_frames(cols, rows, path))
+def import_animation(cols, rows, path, speed):
+    if speed is None:
+        speed = 4
+    return Animation(import_frames(cols, rows, path), speed=speed)
 
 
 def import_animations(animations_config, paths):
     animations = []
     for i in range(len(animations_config)):
-        animations.append(import_animation(animations_config[i][0], animations_config[i][1], paths[i]))
+        animations.append(import_animation(animations_config[i][0], animations_config[i][1], paths[i], animations_config[2] if len(animations_config) > 2 else None))
     return animations
 
 
 def import_named_animations(animations_config, paths):
     animations = {}
     for i in range(len(animations_config)):
-        animations[animations_config[i][2]] = import_animation(animations_config[i][0], animations_config[i][1], paths[i])
+        animations[animations_config[i][2]] = import_animation(animations_config[i][0], animations_config[i][1], paths[i], animations_config[i][3] if len(animations_config[i]) > 3 else None)
     return animations
