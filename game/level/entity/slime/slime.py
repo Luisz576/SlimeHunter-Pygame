@@ -2,14 +2,14 @@ from game.settings import *
 from game.math import points_dis
 from game.components import FollowableSprite
 from game.components.animation import AnimationEvent
-from game.level.entity import Entity
+from game.level.entity import EnemyEntity
 from game.level.entity.slime import Slimes
 from game.level.attack import AttackArea
 from game.importer import import_named_animations, import_image
 
 
 def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance,
-                     attack_damage, speed, health, chasing_min_distance_to_change_direction, attack_range):
+                     attack_damage, speed, health, chasing_min_distance_to_change_direction, attack_range, slime_die_score):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -22,7 +22,8 @@ def build_slime_data(animations, start_animation_name, shadow_path, shadow_offse
         "attack_range": attack_range,
         "speed": speed,
         "health": health,
-        "chasing_min_distance_to_change_direction": chasing_min_distance_to_change_direction
+        "chasing_min_distance_to_change_direction": chasing_min_distance_to_change_direction,
+        "slime_die_score": slime_die_score
     }
 
 
@@ -65,6 +66,7 @@ def get_slime_data(slime):
                 attack_range=(40, 40),
                 attack_min_distance=40,
                 chasing_min_distance_to_change_direction=20,
+                slime_die_score = 1
             )
             # scale
             slime_data["animations"][SlimeAnimation.IDLE].scale_frames(3)
@@ -76,7 +78,7 @@ def get_slime_data(slime):
         return None
 
 
-class Slime(Entity):
+class Slime(EnemyEntity):
     def __init__(self, game, pos, group, collision_group, player_group, slime_data_type):
         # target
         self.target = None
@@ -85,7 +87,8 @@ class Slime(Entity):
         self.slime_data = get_slime_data(slime_data_type)
         self.health = self.slime_data["health"]
         # super
-        super().__init__(game, pos, self.slime_data["speed"], group, collision_group, self.slime_data['animations'], self.slime_data['start_animation_name'])
+        super().__init__(game, pos, self.slime_data["speed"], group, collision_group, self.slime_data['animations'],
+                         self.slime_data['start_animation_name'], self.slime_data['slime_die_score'])
         # shadow
         self.shadow = FollowableSprite(
             import_image(self.slime_data['shadow']['path']),
@@ -185,4 +188,5 @@ class Slime(Entity):
     def update(self, delta):
         if not self.receiving_damage:
             self._ia()
+        # TODO: Slime behaviour
         super().update(delta)

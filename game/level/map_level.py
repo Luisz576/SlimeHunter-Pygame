@@ -58,6 +58,7 @@ class MapLevel(Level):
         for enemy in self.enemies:
             if enemy.uuid == entity.uuid:
                 self.enemies.remove(enemy)
+                self.game.game_score += enemy.enemy_die_score
                 return
 
     def load_pause_screen(self):
@@ -95,3 +96,4 @@ class MapLevel(Level):
     def _render(self, delta):
         self.render_sprites.draw(self.player.rect.center)
         self.render_sprites.update(delta)
+        self.game_hud.render(delta)

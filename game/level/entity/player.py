@@ -110,6 +110,7 @@ class Player(Entity):
         self.health.hurt(damage)
         if self.health.health > 0:
             self.receiving_damage = True
+            # TODO: animation receiving damage
         else:
             self.game.level.game_over()
 
