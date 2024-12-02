@@ -1,5 +1,3 @@
-from pygame import Surface
-
 from game.level.attack import AttackArea
 from game.settings import *
 from game.importer import import_named_animations, import_image
@@ -7,6 +5,7 @@ from game.level.entity import Entity
 from game.components import FollowableSprite, Health
 from game.components.animation import AnimationEvent
 from game.level.inventory import PlayerInventory
+from game.sound import Sounds
 
 
 class PlayerAnimation(Enum):
@@ -57,13 +56,13 @@ def get_player_data(player_key):
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Attack01.png'),
                     ]
                 ),
-                max_health=6,
+                max_health=3,
                 start_animation_name=PlayerAnimation.IDLE,
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
                 speed=300,
-                attack_range=(50, 50),
+                attack_range=(60, 50),
                 base_attack_damage=2,
             )
             # scale
@@ -109,8 +108,9 @@ class Player(Entity):
     def give_damage(self, damage):
         self.health.hurt(damage)
         if self.health.health > 0:
-            self.receiving_damage = True
-            # TODO: animation receiving damage
+            #self.receiving_damage = True
+            print(f"Player receive damage: {damage}")
+            self.game.sound_manager.play_sound(Sounds.PLAYER_HURTED)
         else:
             self.game.level.game_over()
 
@@ -154,15 +154,16 @@ class Player(Entity):
                 self.attacking = True
 
     def __attack_give_damage_handler(self):
+        self.game.sound_manager.play_sound(Sounds.SWORD_ATTACK)
         if self.flipped:
             AttackArea(self.attack_damage(),
-                (self.rect.x, self.rect.y),
+                (self.rect.centerx, self.rect.centery),
                 (-self.attack_range[0], self.attack_range[1]),
                 self.enemy_group
             )
         else:
             AttackArea(self.attack_damage(),
-                (self.rect.x, self.rect.y),
+                (self.rect.centerx, self.rect.centery),
                 self.attack_range,
                 self.enemy_group
             )

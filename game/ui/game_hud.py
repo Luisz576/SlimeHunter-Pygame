@@ -25,7 +25,7 @@ class GameHud:
 
     def update(self, delta):
         self.score.change_text(f"Score: {self.game.game_score}")
-        self.player_life.change_text(f"Life: {self.game.level.player.health.health}")
+        self.player_life.change_text(f"Life: {self.game.level.player.health.health}/{self.game.level.player.health.max_health}")
 
     def render(self, delta):
         for component in self.components:

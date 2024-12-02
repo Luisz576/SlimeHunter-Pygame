@@ -6,6 +6,7 @@ from sys import exit
 from os.path import join
 
 pygame.font.init()
+pygame.mixer.init()
 
 GAME_NAME = "Slime Hunter"
 

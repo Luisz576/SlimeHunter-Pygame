@@ -17,5 +17,6 @@ def level_builder(level, game):
             tile_scale=3,
             slime_chances=[
                 (1, NormalSlime)
-            ]
+            ],
+            background_music_path=join("assets", "sounds", "bg_sound.ogg")
         )

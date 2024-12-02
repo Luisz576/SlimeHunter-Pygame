@@ -34,6 +34,6 @@ class AttackArea:
 
     def attack(self):
         for sprite in self.attack_group:
-            if self.is_achievable((sprite.rect.x, sprite.rect.y)):
+            if self.is_achievable((sprite.rect.centerx, sprite.rect.centery)):
                 if sprite.give_damage is not None:
                     sprite.give_damage(self.damage)

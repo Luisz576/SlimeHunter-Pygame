@@ -7,7 +7,7 @@ from game.ui import PauseScreen, GameHud
 
 
 class MapLevel(Level):
-    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale):
+    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale, background_music_path):
         super().__init__(game)
         # init
         self.pause_screen = None
@@ -43,6 +43,14 @@ class MapLevel(Level):
         self.player = None
         self.spawn_player()
 
+        # bg sound
+        self.background_music_path = background_music_path
+        if self.background_music_path is not None:
+            self.game.sound_manager.set_background_music(self.background_music_path)
+
+    def unload_level(self):
+        self.game.sound_manager.set_background_music(None)
+
     def spawn_player(self):
         if self.player is None:
             self.player = Player(
@@ -76,6 +84,12 @@ class MapLevel(Level):
         if keys[pygame.K_ESCAPE] and self.paused_delay <= 0:
             self.paused = not self.paused
             self.paused_delay = 0.2
+            # music
+            if self.background_music_path is not None:
+                if self.paused:
+                    self.game.sound_manager.set_background_music(None)
+                else:
+                    self.game.sound_manager.set_background_music(self.background_music_path)
 
     def run(self, delta):
         # input

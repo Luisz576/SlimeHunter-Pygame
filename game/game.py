@@ -4,6 +4,7 @@ import pygame.time
 
 from game.settings import *
 from game.level import Levels, level_builder
+from game.sound import SlimeHunterSoundManager
 
 
 class Game:
@@ -17,6 +18,8 @@ class Game:
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption(GAME_NAME)
 
+        self.sound_manager = SlimeHunterSoundManager()
+
         self.clock = pygame.time.Clock()
 
         # global
@@ -26,6 +29,8 @@ class Game:
         self.load_level()
 
     def load_level(self, level=Levels.MENU):
+        if self.level is not None:
+            self.level.unload_level()
         self.level = level_builder(level, self)
 
     def run(self):

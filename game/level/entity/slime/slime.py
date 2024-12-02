@@ -1,3 +1,5 @@
+import random
+
 from game.settings import *
 from game.math import points_dis
 from game.components import FollowableSprite
@@ -45,7 +47,7 @@ def get_slime_data(slime):
                 animations=import_named_animations(
                     [
                         (4, 1, SlimeAnimation.IDLE, 4),
-                        (4, 1, SlimeAnimation.WALKING, 5),
+                        (4, 1, SlimeAnimation.WALKING, 3),
                         (7, 1, SlimeAnimation.ATTACKING, 6),
                         (3, 1, SlimeAnimation.HURTING, 4),
                     ],
@@ -59,7 +61,7 @@ def get_slime_data(slime):
                 start_animation_name=SlimeAnimation.IDLE,
                 shadow_path=None,
                 shadow_offset=None,
-                speed=130,
+                speed=120,
                 health=5,
                 # ia
                 attack_damage=1,
@@ -152,13 +154,13 @@ class Slime(EnemyEntity):
     def __attack_give_damage_handler(self):
         if self.flipped:
             AttackArea(self.attack_damage,
-                (self.rect.x, self.rect.y),
+                (self.rect.centerx, self.rect.centery),
                 (-self.attack_range[0], self.attack_range[1]),
                 self.player_group
             )
         else:
             AttackArea(self.attack_damage,
-                (self.rect.x, self.rect.y),
+                (self.rect.centerx, self.rect.centery),
                 self.attack_range,
                 self.player_group
             )

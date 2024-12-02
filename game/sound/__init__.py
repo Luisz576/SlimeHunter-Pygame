@@ -1,0 +1,1 @@
+from .slime_hunter_sound_manager import SlimeHunterSoundManager, Sounds

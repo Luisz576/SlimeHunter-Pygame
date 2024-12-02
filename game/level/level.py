@@ -12,3 +12,6 @@ class Level:
 
     def run(self, delta):
         pass
+
+    def unload_level(self):
+        pass

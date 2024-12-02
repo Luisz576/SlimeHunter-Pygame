@@ -4,11 +4,10 @@ from game.level import MapLevel
 
 class MonsterLevel(MapLevel):
     # slime_chances => [ (Chance, SlimeClass), ... ]
-    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale, slime_chances):
-        super().__init__(game, map_path, map_layers, map_collision_layers, tile_scale)
+    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale, slime_chances, background_music_path):
+        super().__init__(game, map_path, map_layers, map_collision_layers, tile_scale, background_music_path)
         self.slime_chances = slime_chances
         self.time_elapsed = 0
-        self.A = 0
 
     def run(self, delta):
         self.spawner()
@@ -16,10 +15,8 @@ class MonsterLevel(MapLevel):
         super().run(delta)
 
     def spawner(self):
-        # TODO: Logic
-       # if random.random() < 0.001:
-        if self.A < 2:
-            self.A += 1
+        # TODO: better spawn system
+        if random.random() < 0.002:
             self.spawn_slime()
 
     def spawn_slime(self):
