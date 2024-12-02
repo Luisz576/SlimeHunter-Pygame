@@ -1,7 +1,7 @@
 from game.settings import *
 from game.level import Level
 from .map import Map
-from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGroup
+from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGroup, PlayerGroup
 from game.level.entity import Player, Players
 from game.ui import PauseScreen, GameHud
 
@@ -16,25 +16,6 @@ class MapLevel(Level):
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
-        # sprite groups
-        self.render_sprites = RenderSpritesGroup()
-        self.collision_sprites = CollisionSpritesGroup()
-
-        # map
-        self.map = Map(map_path, map_layers, map_collision_layers, self.render_sprites,
-                       collision_group=self.collision_sprites, tile_scale=tile_scale)
-        self.enemies = []
-        # player
-        self.enemy_group = EnemyGroup()
-        self.player = Player(
-            self.game,
-            (400, 400),
-            self.render_sprites,
-            self.collision_sprites,
-            self.enemy_group,
-            Players.SOLDIER
-        )
-
         # pause
         self.paused = False
         self.paused_delay = 0
@@ -45,6 +26,33 @@ class MapLevel(Level):
         self.load_game_hud()
         if self.game_hud is None:
             raise Exception("Game hud not loaded!")
+
+        # sprite groups
+        self.render_sprites = RenderSpritesGroup()
+        self.collision_sprites = CollisionSpritesGroup()
+
+        # map
+        self.map = Map(map_path, map_layers, map_collision_layers, self.render_sprites,
+                       collision_group=self.collision_sprites, tile_scale=tile_scale)
+        # enemy
+        self.enemies = []
+        self.enemy_group = EnemyGroup()
+
+        # player
+        self.player_group = PlayerGroup()
+        self.player = None
+        self.spawn_player()
+
+    def spawn_player(self):
+        if self.player is None:
+            self.player = Player(
+                self.game,
+                (400, 400),
+                [self.render_sprites, self.player_group],
+                self.collision_sprites,
+                self.enemy_group,
+                Players.SOLDIER
+            )
 
     def kill_entity(self, entity):
         for enemy in self.enemies:

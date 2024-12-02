@@ -72,5 +72,6 @@ class MenuLevel(Level):
         self.quit_button.update(delta)
 
     def render(self):
+        self.game.screen.fill((0, 0, 0))
         for component in self.components:
             component.render(self.game.screen)

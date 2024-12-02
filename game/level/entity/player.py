@@ -9,6 +9,13 @@ from game.components.animation import AnimationEvent
 from game.level.inventory import PlayerInventory
 
 
+class PlayerAnimation(Enum):
+    IDLE = "idle"
+    WALKING = "walking"
+    ATTACKING = "attacking"
+    HURTING = "hurting"
+
+
 hash_player_data = {}
 
 
@@ -39,9 +46,10 @@ def get_player_data(player_key):
             hash_player_data[player_key] = build_player_data(
                 animations=import_named_animations(
                     [
-                        (6, 1, "idle"),
-                        (8, 1, "walking"),
-                        (6, 1, "attacking"),
+                        (6, 1, PlayerAnimation.IDLE, 4),
+                        (8, 1, PlayerAnimation.WALKING, 4),
+                        (6, 1, PlayerAnimation.ATTACKING, 15),
+                        # (6, 1, PlayerAnimation.HURTING, ?),
                     ],
                     [
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Idle.png'),
@@ -50,7 +58,7 @@ def get_player_data(player_key):
                     ]
                 ),
                 max_health=6,
-                start_animation_name="idle",
+                start_animation_name=PlayerAnimation.IDLE,
                 shadow_path=join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Shadow.png'),
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
@@ -59,10 +67,10 @@ def get_player_data(player_key):
                 base_attack_damage=2,
             )
             # scale
-            hash_player_data[player_key]["animations"]["idle"].scale_frames(3)
-            hash_player_data[player_key]["animations"]["walking"].scale_frames(3)
-            hash_player_data[player_key]["animations"]["attacking"].scale_frames(3)
-            hash_player_data[player_key]["animations"]["attacking"].speed = 15
+            hash_player_data[player_key]["animations"][PlayerAnimation.IDLE].scale_frames(3)
+            hash_player_data[player_key]["animations"][PlayerAnimation.WALKING].scale_frames(3)
+            hash_player_data[player_key]["animations"][PlayerAnimation.ATTACKING].scale_frames(3)
+            # hash_player_data[player_key]["animations"][PlayerAnimation.HURTING].scale_frames(3)
     # return data
     return hash_player_data[player_key]
 
@@ -93,14 +101,21 @@ class Player(Entity):
             if self.player_data['shadow']['path'] is not None else None
         # register listener
         self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
-        self.player_data["animations"]["attacking"].set_listener("attack_listener", self.__attack_handler)
+        self.player_data["animations"][PlayerAnimation.ATTACKING].set_listener("attack_listener", self.__attack_handler)
 
     def attack_damage(self):
         return self.base_attack_damage # + inventory....
 
+    def give_damage(self, damage):
+        self.health.hurt(damage)
+        if self.health.health > 0:
+            self.receiving_damage = True
+        else:
+            self.game.level.game_over()
+
     def __animations_handler(self, event, animation, animation_controller):
         if event == AnimationEvent.ANIMATION_CHANGED:
-            if self.animation_controller.current_animation != "attacking":
+            if self.animation_controller.current_animation != PlayerAnimation.ATTACKING:
                 self.attacking = False
 
     def __attack_handler(self, event, animation):
@@ -153,13 +168,14 @@ class Player(Entity):
 
     def _animate(self, delta):
         # animation
-        if self.is_moving():
-            self.animation_controller.change("walking")
+        if self.is_attacking():
+            self.animation_controller.change(PlayerAnimation.ATTACKING)
+        #elif self.receiving_damage:
+            #self.animation_controller.change(PlayerAnimation.HURTING)
+        elif self.is_moving():
+            self.animation_controller.change(PlayerAnimation.WALKING)
         else:
-            if self.is_attacking():
-                self.animation_controller.change("attacking")
-            else:
-                self.animation_controller.change("idle")
+            self.animation_controller.change(PlayerAnimation.IDLE)
 
         # flip
         if self.velocity.x != 0:

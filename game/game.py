@@ -19,6 +19,9 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
+        # global
+        self.game_score = 0
+
         # level
         self.load_level()
 

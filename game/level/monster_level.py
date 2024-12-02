@@ -1,29 +1,40 @@
-from game.settings import *
+import random
 from game.level import MapLevel
-from game.level.entity import Slime, Slimes
 
 
 class MonsterLevel(MapLevel):
-    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale):
+    # slime_chances => [ (Chance, SlimeClass), ... ]
+    def __init__(self, game, map_path, map_layers, map_collision_layers, tile_scale, slime_chances):
         super().__init__(game, map_path, map_layers, map_collision_layers, tile_scale)
-        self.TEMP = True
+        self.slime_chances = slime_chances
+        self.time_elapsed = 0
+        self.A = 0
 
-    def _update(self, delta):
+    def run(self, delta):
         self.spawner()
-        super()._update(delta)
+        self.time_elapsed += delta
+        super().run(delta)
 
     def spawner(self):
-        # TODO: Slime aleatório
-        # TODO: if random.random() < 0.001:
-        if self.TEMP:
-            self.TEMP = False
-            enemy = Slime(
-                self.game,
-                # (random.randint(200, 2000), random.randint(200, 1800)),
-                (600, 600),
-                [self.render_sprites, self.enemy_group],
-                self.collision_sprites,
-                Slimes.NORMAL_SLIME
-            )
-            enemy.target = self.player
-            self.enemies.append(enemy)
+        # TODO: Logic
+       # if random.random() < 0.001:
+        if self.A < 2:
+            self.A += 1
+            self.spawn_slime()
+
+    def spawn_slime(self):
+        r = random.random()
+        c = 0
+        for chance, slime in self.slime_chances:
+            c += chance
+            if r <= c:
+                new_slime = slime(
+                    self.game,
+                    (random.randint(200, 2000), random.randint(200, 1800)),
+                    [self.render_sprites, self.enemy_group],
+                    self.collision_sprites,
+                    self.player_group
+                )
+                new_slime.target = self.player
+                self.enemies.append(new_slime)
+                break

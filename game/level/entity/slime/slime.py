@@ -1,18 +1,15 @@
-from game.level.attack import AttackArea
 from game.settings import *
 from game.math import points_dis
 from game.components import FollowableSprite
 from game.components.animation import AnimationEvent
 from game.level.entity import Entity
+from game.level.entity.slime import Slimes
+from game.level.attack import AttackArea
 from game.importer import import_named_animations, import_image
 
 
-class Slimes(Enum):
-    NORMAL_SLIME = 1
-
-
 def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance,
-                     attack_damage, speed, health, chasing_min_distance_to_change_direction):
+                     attack_damage, speed, health, chasing_min_distance_to_change_direction, attack_range):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -22,6 +19,7 @@ def build_slime_data(animations, start_animation_name, shadow_path, shadow_offse
         },
         "attack_min_distance": attack_min_distance,
         "attack_damage": attack_damage,
+        "attack_range": attack_range,
         "speed": speed,
         "health": health,
         "chasing_min_distance_to_change_direction": chasing_min_distance_to_change_direction
@@ -42,7 +40,7 @@ def get_slime_data(slime):
     if slime not in hash_slime_data:
         # build data
         if slime == Slimes.NORMAL_SLIME:
-            hash_slime_data[slime] = build_slime_data(
+            slime_data = build_slime_data(
                 animations=import_named_animations(
                     [
                         (4, 1, SlimeAnimation.IDLE, 4),
@@ -64,22 +62,25 @@ def get_slime_data(slime):
                 health=5,
                 # ia
                 attack_damage=1,
+                attack_range=(40, 40),
                 attack_min_distance=40,
                 chasing_min_distance_to_change_direction=20,
             )
             # scale
-            hash_slime_data[slime]["animations"][SlimeAnimation.IDLE].scale_frames(3)
-            hash_slime_data[slime]["animations"][SlimeAnimation.WALKING].scale_frames(3)
-            hash_slime_data[slime]["animations"][SlimeAnimation.ATTACKING].scale_frames(3)
-            hash_slime_data[slime]["animations"][SlimeAnimation.HURTING].scale_frames(3)
-    # return data
-    return hash_slime_data[slime]
+            slime_data["animations"][SlimeAnimation.IDLE].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.WALKING].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.ATTACKING].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.HURTING].scale_frames(3)
+            return slime_data
+        # none
+        return None
 
 
 class Slime(Entity):
-    def __init__(self, game, pos, group, collision_group, slime_data_type):
+    def __init__(self, game, pos, group, collision_group, player_group, slime_data_type):
         # target
         self.target = None
+        self.player_group = player_group
         # get slime data
         self.slime_data = get_slime_data(slime_data_type)
         self.health = self.slime_data["health"]
@@ -95,6 +96,8 @@ class Slime(Entity):
         ) if self.slime_data['shadow']['path'] is not None else None
         # attributes
         self.attacking = False
+        self.attack_damage = self.slime_data['attack_damage']
+        self.attack_range = self.slime_data['attack_range']
         # animation
         self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
 
@@ -113,10 +116,13 @@ class Slime(Entity):
 
     def __animations_handler(self, event, animation, animation_controller):
         if event == AnimationEvent.ANIMATION_CHANGED:
-            self.attacking = (self.animation_controller.current_animation == SlimeAnimation.ATTACKING)
+            if animation_controller.current_animation != SlimeAnimation.ATTACKING:
+                self.attacking = False
         elif event == AnimationEvent.ENDS:
-            if self.animation_controller.current_animation == SlimeAnimation.HURTING:
-                self.receiving_damage = False
+            self.receiving_damage = False
+        elif event == AnimationEvent.FRAME_CHANGED:
+            if animation.index == 5 and animation_controller.current_animation == SlimeAnimation.ATTACKING:
+                self.__attack_give_damage_handler()
 
     def _ia(self):
         self.velocity.x = 0
@@ -141,19 +147,18 @@ class Slime(Entity):
                 self._attack_hanlder()
 
     def __attack_give_damage_handler(self):
-        # if self.flipped:
-        #     AttackArea(self.attack_damage(),
-        #         (self.rect.x, self.rect.y),
-        #         (-self.attack_range[0], self.attack_range[1]),
-        #         self.player_group
-        #     )
-        # else:
-        #     AttackArea(self.attack_damage(),
-        #         (self.rect.x, self.rect.y),
-        #         self.attack_range,
-        #         self.player_group
-        #     )
-        pass
+        if self.flipped:
+            AttackArea(self.attack_damage,
+                (self.rect.x, self.rect.y),
+                (-self.attack_range[0], self.attack_range[1]),
+                self.player_group
+            )
+        else:
+            AttackArea(self.attack_damage,
+                (self.rect.x, self.rect.y),
+                self.attack_range,
+                self.player_group
+            )
 
     def _attack_hanlder(self):
         if not self.is_attacking() and not self.is_moving():
@@ -164,13 +169,12 @@ class Slime(Entity):
         # animation
         if self.receiving_damage:
             self.animation_controller.change(SlimeAnimation.HURTING)
+        elif self.is_attacking():
+            self.animation_controller.change(SlimeAnimation.ATTACKING)
         elif self.is_moving():
             self.animation_controller.change(SlimeAnimation.WALKING)
         else:
-            if self.is_attacking():
-                self.animation_controller.change(SlimeAnimation.ATTACKING)
-            else:
-                self.animation_controller.change(SlimeAnimation.IDLE)
+            self.animation_controller.change(SlimeAnimation.IDLE)
 
         # flip
         if self.velocity.x != 0:
