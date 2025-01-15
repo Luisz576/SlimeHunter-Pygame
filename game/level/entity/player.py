@@ -1,4 +1,5 @@
 from game.level.attack import AttackArea
+from game.level.entity.components.Shootable import Shootable, PROJECTILE_ARROW
 from game.settings import *
 from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
@@ -19,7 +20,7 @@ class PlayerAnimation(Enum):
 hash_player_data = {}
 
 
-def build_player_data(animations, start_animation_name, shadow_path, max_health, shadow_offset, speed, attack_range, base_attack_damage, shadow_scale=1):
+def build_player_data(animations, start_animation_name, shadow_path, delay_to_shoot, max_health, inventory_config, shadow_offset, speed, attack_range, base_attack_damage, shadow_scale=1):
     return {
         "animations": animations,
         "start_animation_name": start_animation_name,
@@ -31,7 +32,9 @@ def build_player_data(animations, start_animation_name, shadow_path, max_health,
         "speed": speed,
         "max_health": max_health,
         "attack_range": attack_range,
-        "base_attack_damage": base_attack_damage
+        "inventory_config": inventory_config,
+        "base_attack_damage": base_attack_damage,
+        "delay_to_shoot": delay_to_shoot,
     }
 
 
@@ -67,6 +70,10 @@ def get_player_data(player_key):
                 speed=300,
                 attack_range=(80, 50),
                 base_attack_damage=2,
+                delay_to_shoot=2,
+                inventory_config = {
+                    "max_arrows": 2,
+                }
             )
             # scale
             hash_player_data[player_key]["animations"][PlayerAnimation.IDLE].scale_frames(3)
@@ -79,7 +86,7 @@ def get_player_data(player_key):
 
 
 class Player(Entity):
-    def __init__(self, game, pos, group, collision_group, enemy_group, player_data_type):
+    def __init__(self, game, pos, group, collision_group, enemy_group, render_projectile_group, player_data_type):
         self.enemy_group = enemy_group
         # get data
         self.player_data = get_player_data(player_data_type)
@@ -89,8 +96,12 @@ class Player(Entity):
         # attack
         self.base_attack_damage = self.player_data['base_attack_damage']
         self.attack_range = self.player_data['attack_range']
+        self.delay_to_shoot = self.player_data["delay_to_shoot"]
+        self.delay_to_shoot_delta = 0
         # player inventory
-        self.inventory = PlayerInventory()
+        self.inventory = PlayerInventory(
+            max_arrows=self.player_data["inventory_config"]["max_arrows"]
+        )
         # health
         self.health = Health(self.player_data["max_health"])
         # shadow
@@ -102,6 +113,8 @@ class Player(Entity):
             z=WorldLayers.SHADOW
         ).scale(self.player_data['shadow']['scale'] if self.player_data['shadow']['scale'] > 1 else 1)\
             if self.player_data['shadow']['path'] is not None else None
+        # shootable
+        self.shootable_arrow = Shootable(self, PROJECTILE_ARROW, render_projectile_group)
         # register listener
         self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
         self.player_data["animations"][PlayerAnimation.ATTACKING].set_listener("attack_listener", self.__attack_handler)
@@ -122,6 +135,12 @@ class Player(Entity):
         if event == AnimationEvent.ANIMATION_CHANGED:
             if self.animation_controller.current_animation != PlayerAnimation.ATTACKING:
                 self.attacking = False
+
+    def shoot(self):
+        if self.delay_to_shoot_delta <= 0:
+            self.shootable_arrow.shoot(self.game.mouse_loc)
+            self.inventory.use_arrow()
+            self.delay_to_shoot_delta = self.delay_to_shoot
 
     def __attack_handler(self, event, animation):
         if event == AnimationEvent.ENDS:
@@ -149,6 +168,8 @@ class Player(Entity):
         # attack
         if keys[pygame.K_SPACE]:
             self._attack_input_handler()
+        elif self.game.is_mouse_clicking:
+            self.shoot()
 
     def _attack_input_handler(self):
         if not self.is_attacking() and not self.is_moving():
@@ -189,4 +210,8 @@ class Player(Entity):
 
     def update(self, delta):
         self._input()
+
+        if self.delay_to_shoot_delta > 0:
+            self.delay_to_shoot_delta -= delta
+
         super().update(delta)

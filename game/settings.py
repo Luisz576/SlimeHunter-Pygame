@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import random
 from pygame.math import Vector2
@@ -40,3 +42,21 @@ def WorldLayersValues():
     return [WorldLayers.BACKGROUND, WorldLayers.BUILDING, WorldLayers.SHADOW, WorldLayers.ITEM, WorldLayers.ENTITY,
             WorldLayers.AIR]
 
+
+def calc_points_angle(p_start, p_end):
+    delta_y = p_end[1] - p_start[1]
+    delta_x = p_end[0] - p_start[0]
+
+    angulo_rad = math.atan2(delta_y, delta_x)
+    angulo_deg = math.degrees(angulo_rad)
+
+    return angulo_deg
+
+def calc_points_vector_look(p_start, p_end):
+    delta_x = p_end[0] - p_start[0]
+    delta_y = p_end[1] - p_start[1]
+
+    mag = math.sqrt(delta_x**2 + delta_y**2)
+
+    vec = (delta_x / mag, delta_y / mag)
+    return vec

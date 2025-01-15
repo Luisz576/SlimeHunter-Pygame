@@ -7,6 +7,9 @@ class Level:
     def is_paused(self):
         return False
 
+    def add_projectile(self, projectile):
+        pass
+
     def kill_entity(self, entity):
         pass
 

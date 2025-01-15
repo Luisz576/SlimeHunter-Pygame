@@ -38,6 +38,9 @@ class MapLevel(Level):
         self.enemies = []
         self.enemy_group = EnemyGroup()
 
+        # projectile
+        self.projectiles = []
+
         # player
         self.player_group = PlayerGroup()
         self.player = None
@@ -59,8 +62,12 @@ class MapLevel(Level):
                 [self.render_sprites, self.player_group],
                 self.collision_sprites,
                 self.enemy_group,
+                self.render_sprites,
                 Players.SOLDIER
             )
+
+    def add_projectile(self, projectile):
+        self.projectiles.append(projectile)
 
     def kill_entity(self, entity):
         for enemy in self.enemies:
@@ -103,6 +110,15 @@ class MapLevel(Level):
             self.pause_screen.update(delta)
         else:
             self.game_hud.update(delta)
+        # projectiles
+        to_remove = []
+        for projectile in self.projectiles:
+            if projectile.is_destroyed:
+                to_remove.append(projectile)
+            else:
+                projectile.update(delta)
+        for r in to_remove:
+            self.projectiles.remove(r)
         # clear
         self.display_surface.fill(COLORS['black'])
         # sprites

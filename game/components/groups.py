@@ -34,7 +34,6 @@ class RenderSpritesGroup(pygame.sprite.Group):
                 else:
                     self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
 
-
 class CollisionSpritesGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__(self)

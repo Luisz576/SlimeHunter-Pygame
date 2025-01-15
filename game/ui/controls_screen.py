@@ -36,6 +36,10 @@ class ControlsScreen:
             {
                 "text": "Pause",
                 "key": "Esc"
+            },
+            {
+                "text": "Shoot",
+                "key": "Left Click"
             }
         ]
         self.controls_labels = []
@@ -44,7 +48,7 @@ class ControlsScreen:
             self.controls_labels.append(
                 Label(
                     text=f"{control["text"]}: {control["key"]}",
-                    pos=(100, 100 + i*52),
+                    pos=(80, 100 + i*52),
                     color=(255, 255, 255),
                     size=42
                 )
