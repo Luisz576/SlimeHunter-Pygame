@@ -1,8 +1,13 @@
+import pygame
+
 from game.settings import Enum
 from pygame.font import SysFont
 
 
 class UIComponent:
+    def __init__(self, pos):
+        self.pos = pos
+
     def update(self, delta):
         pass
 
@@ -22,8 +27,8 @@ def font_comic_sans_ms(size):
 # Label
 class Label(UIComponent):
     def __init__(self, text, pos, color, size, font=None):
+        super().__init__(pos)
         self.text = text
-        self.pos = pos
         self.color = color
         self.size = size
         self.font = font
@@ -76,3 +81,43 @@ class ButtonLabel(Label):
             self.time_selected_delta = 0
             if self._is_color_selected():
                 self.change_color(self.not_selected_color)
+
+# InlineComponents
+class InlineComponents(UIComponent):
+    def __init__(self, pos_x, pos_y, offset_x, offset_y, icons):
+        super().__init__(pos_x)
+        self.icons = icons
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        self.amount = len(icons)
+        self.__MAX__ = len(icons)
+
+    def set_render_amount(self, amount):
+        self.amount = max(0, min(amount, self.__MAX__))
+
+    def update(self, delta):
+        for i in range(len(self.icons)):
+            icon_pos_x = self.pos_x + (i * self.offset_x)
+            icon_pos_y = self.pos_y + (i * self.offset_y)
+            self.icons[i].pos = (icon_pos_x, icon_pos_y)
+            self.icons[i].update(delta)
+            i += 1
+
+    def render(self, screen):
+        for i in range(self.__MAX__):
+            if i < self.amount:
+                self.icons[i].render(screen)
+
+class Image(UIComponent):
+    def __init__(self, pos, path):
+        super().__init__(pos)
+        self.path = path
+        self.img = pygame.image.load(path)
+
+    def update(self, delta):
+        pass
+
+    def render(self, screen):
+        screen.blit(self.img, self.pos)
