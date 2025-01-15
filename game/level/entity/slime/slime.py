@@ -61,7 +61,7 @@ def get_slime_data(slime):
                 start_animation_name=SlimeAnimation.IDLE,
                 shadow_path=None,
                 shadow_offset=None,
-                speed=120,
+                speed=150,
                 health=5,
                 # ia
                 attack_damage=1,
@@ -188,7 +188,9 @@ class Slime(EnemyEntity):
         super()._animate(delta)
 
     def update(self, delta):
-        if not self.receiving_damage:
+        if self.receiving_damage:
+            self.velocity.x = 0
+            self.velocity.y = 0
+        else:
             self._ia()
-        # TODO: Slime behaviour
         super().update(delta)

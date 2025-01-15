@@ -82,6 +82,7 @@ class MapLevel(Level):
         if self.paused_delay > 0:
             self.paused_delay -= delta
         if keys[pygame.K_ESCAPE] and self.paused_delay <= 0:
+            self.pause_screen.page_index = 0
             self.paused = not self.paused
             self.paused_delay = 0.2
             # music
@@ -90,6 +91,9 @@ class MapLevel(Level):
                     self.game.sound_manager.set_background_music(None)
                 else:
                     self.game.sound_manager.set_background_music(self.background_music_path)
+
+    def is_paused(self):
+        return self.paused
 
     def run(self, delta):
         # input

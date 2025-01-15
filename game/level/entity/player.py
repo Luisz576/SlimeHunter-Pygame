@@ -13,6 +13,7 @@ class PlayerAnimation(Enum):
     WALKING = "walking"
     ATTACKING = "attacking"
     HURTING = "hurting"
+    ATTACK_ARROW = "attack_arrow"
 
 
 hash_player_data = {}
@@ -49,11 +50,13 @@ def get_player_data(player_key):
                         (8, 1, PlayerAnimation.WALKING, 4),
                         (6, 1, PlayerAnimation.ATTACKING, 15),
                         # (6, 1, PlayerAnimation.HURTING, ?),
+                        (9, 1, PlayerAnimation.ATTACK_ARROW, 20),
                     ],
                     [
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Idle.png'),
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Walk.png'),
                         join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Attack01.png'),
+                        join('assets', 'characters', 'Soldier', 'Soldier', 'Soldier-Attack-Arrow.png'),
                     ]
                 ),
                 max_health=3,
@@ -62,13 +65,14 @@ def get_player_data(player_key):
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
                 speed=300,
-                attack_range=(60, 50),
+                attack_range=(80, 50),
                 base_attack_damage=2,
             )
             # scale
             hash_player_data[player_key]["animations"][PlayerAnimation.IDLE].scale_frames(3)
             hash_player_data[player_key]["animations"][PlayerAnimation.WALKING].scale_frames(3)
             hash_player_data[player_key]["animations"][PlayerAnimation.ATTACKING].scale_frames(3)
+            hash_player_data[player_key]["animations"][PlayerAnimation.ATTACK_ARROW].scale_frames(3)
             # hash_player_data[player_key]["animations"][PlayerAnimation.HURTING].scale_frames(3)
     # return data
     return hash_player_data[player_key]
@@ -130,19 +134,17 @@ class Player(Entity):
         keys = pygame.key.get_pressed()
 
         # moviment
+        self.velocity.y = 0
         if keys[pygame.K_w]:
             self.velocity.y = -1
         elif keys[pygame.K_s]:
             self.velocity.y = 1
-        else:
-            self.velocity.y = 0
 
+        self.velocity.x = 0
         if keys[pygame.K_a]:
             self.velocity.x = -1
         elif keys[pygame.K_d]:
             self.velocity.x = 1
-        else:
-            self.velocity.x = 0
 
         # attack
         if keys[pygame.K_SPACE]:

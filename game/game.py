@@ -1,6 +1,7 @@
 import sys
 
 import pygame.time
+from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP
 
 from game.settings import *
 from game.level import Levels, level_builder
@@ -12,6 +13,10 @@ class Game:
         # init vars
         self.level = None
         self.pause_screen = None
+
+        # mouse
+        self.is_mouse_clicking = False
+        self.mouse_loc = [0, 0]
 
         # setup
         pygame.init()
@@ -41,11 +46,23 @@ class Game:
         while True:
             delta = self.clock.tick() / 1000
 
+            # Mouse pos
+            # mouse
+            mx, my = pygame.mouse.get_pos()
+            self.mouse_loc[0] = mx
+            self.mouse_loc[1] = my
+
             # Events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                elif event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.is_mouse_clicking = True
+                elif event.type == MOUSEBUTTONUP:
+                    if event.button == 1:
+                        self.is_mouse_clicking = False
 
             # Game Logic
             self.level.run(delta)
