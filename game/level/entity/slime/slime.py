@@ -66,8 +66,8 @@ def get_slime_data(slime):
                 # ia
                 attack_damage=1,
                 attack_range=(40, 40),
-                attack_min_distance=28,
-                chasing_min_distance_to_change_direction=20,
+                attack_min_distance=20,
+                chasing_min_distance_to_change_direction=15,
                 slime_die_score = 1
             )
             # scale
