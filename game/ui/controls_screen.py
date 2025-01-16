@@ -47,7 +47,7 @@ class ControlsScreen:
         for control in controls:
             self.controls_labels.append(
                 Label(
-                    text=f"{control["text"]}: {control["key"]}",
+                    text=f"{control['text']}: {control['key']}",
                     pos=(80, 100 + i*52),
                     color=(255, 255, 255),
                     size=42

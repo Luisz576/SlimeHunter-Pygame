@@ -2,6 +2,7 @@ import sys
 
 import pygame.time
 from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP
+from pygame._sdl2 import Window
 
 from game.settings import *
 from game.level import Levels, level_builder
@@ -21,6 +22,7 @@ class Game:
         # setup
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.window = Window.from_display_module()
         pygame.display.set_caption(GAME_NAME)
 
         self.sound_manager = SlimeHunterSoundManager()
@@ -44,7 +46,7 @@ class Game:
 
         # Game Loop
         while True:
-            delta = self.clock.tick() / 1000
+            delta = self.clock.tick(60) / 1000
 
             # Mouse pos
             # mouse
@@ -67,6 +69,7 @@ class Game:
             # Game Logic
             self.level.run(delta)
             pygame.display.update()
+
             # print(f"FPS: {self.clock.get_fps()}")
 
     def quit(self):

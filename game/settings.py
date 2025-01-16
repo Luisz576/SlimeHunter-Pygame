@@ -23,6 +23,9 @@ COLORS = {
 }
 
 
+ENEMIES_TO_GIVE_ARROW = 5
+
+
 class Axis(Enum):
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
@@ -51,6 +54,9 @@ def calc_points_angle(p_start, p_end):
     angulo_deg = math.degrees(angulo_rad)
 
     return angulo_deg
+
+def calc_point_angle(vec):
+    return math.degrees(math.atan2(-vec[1], vec[0]))
 
 def calc_points_vector_look(p_start, p_end):
     delta_x = p_end[0] - p_start[0]

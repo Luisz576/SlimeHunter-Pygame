@@ -73,8 +73,13 @@ class MapLevel(Level):
         for enemy in self.enemies:
             if enemy.uuid == entity.uuid:
                 self.enemies.remove(enemy)
-                self.game.game_score += enemy.enemy_die_score
+                self.add_score(enemy.enemy_die_score)
                 return
+
+    def add_score(self, points):
+        self.game.game_score += points
+        if self.game.game_score % ENEMIES_TO_GIVE_ARROW == 0:
+            self.player.inventory.give_arrow()
 
     def load_pause_screen(self):
         self.pause_screen = PauseScreen(self.game)

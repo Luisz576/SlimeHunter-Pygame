@@ -114,7 +114,7 @@ class Player(Entity):
         ).scale(self.player_data['shadow']['scale'] if self.player_data['shadow']['scale'] > 1 else 1)\
             if self.player_data['shadow']['path'] is not None else None
         # shootable
-        self.shootable_arrow = Shootable(self, PROJECTILE_ARROW, render_projectile_group)
+        self.shootable_arrow = Shootable(self.game, self, PROJECTILE_ARROW, render_projectile_group, self.enemy_group)
         # register listener
         self.animation_controller.set_listener("AnimationsHandler", self.__animations_handler)
         self.player_data["animations"][PlayerAnimation.ATTACKING].set_listener("attack_listener", self.__attack_handler)
@@ -138,9 +138,10 @@ class Player(Entity):
 
     def shoot(self):
         if self.delay_to_shoot_delta <= 0:
-            self.shootable_arrow.shoot(self.game.mouse_loc)
-            self.inventory.use_arrow()
-            self.delay_to_shoot_delta = self.delay_to_shoot
+            if self.inventory.arrows() > 0:
+                self.shootable_arrow.shoot(self.game.mouse_loc)
+                self.inventory.use_arrow()
+                self.delay_to_shoot_delta = self.delay_to_shoot
 
     def __attack_handler(self, event, animation):
         if event == AnimationEvent.ENDS:
