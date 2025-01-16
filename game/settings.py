@@ -25,7 +25,6 @@ COLORS = {
 
 ENEMIES_TO_GIVE_ARROW = 5
 
-
 class Axis(Enum):
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
@@ -66,3 +65,18 @@ def calc_points_vector_look(p_start, p_end):
 
     vec = (delta_x / mag, delta_y / mag)
     return vec
+
+MAX_DIFFICULT = 10
+SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME = {
+    0: 0.001,
+    1: 0.0015,
+    2: 0.0018,
+    3: 0.002,
+    4: 0.0025,
+    5: 0.0028,
+    6: 0.003,
+    7: 0.0035,
+    8: 0.0038,
+    9: 0.004,
+    10: 0.005,
+}

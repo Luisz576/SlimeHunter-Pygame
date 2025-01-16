@@ -1,5 +1,6 @@
 import random
 from game.level import MapLevel
+from game.settings import SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME, MAX_DIFFICULT
 
 
 class MonsterLevel(MapLevel):
@@ -8,6 +9,8 @@ class MonsterLevel(MapLevel):
         super().__init__(game, map_path, map_layers, map_collision_layers, tile_scale, background_music_path)
         self.slime_chances = slime_chances
         self.time_elapsed = 0
+        self.current_difficult = 0
+        self.amount_spawned = 0
 
     def run(self, delta):
         self.spawner()
@@ -15,13 +18,16 @@ class MonsterLevel(MapLevel):
         super().run(delta)
 
     def spawner(self):
-        # TODO: better spawn system
-        if random.random() < 0.002:
+        if random.random() < SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME[self.current_difficult]:
             self.spawn_slime()
+            if self.amount_spawned % 15 == 0:
+                self.current_difficult = min(self.current_difficult, MAX_DIFFICULT)
+
 
     def spawn_slime(self):
         r = random.random()
         c = 0
+        self.amount_spawned += 1
         for chance, slime in self.slime_chances:
             c += chance
             if r <= c:

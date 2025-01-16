@@ -31,9 +31,21 @@ class GameHud:
             offset_y=0,
             icons=heart_icons
         )
+        self.difficulty = Label(
+            "Difficulty: 0",
+            pos=(580, 60),
+            color=(255, 255, 255),
+            size=32,
+        )
+        self.enemies = Label(
+            "Enemies: 0",
+            pos=(580, 100),
+            color=(255, 255, 255),
+            size=32,
+        )
         self.score = Label(
             "Score: 0",
-            pos=(600, 20),
+            pos=(580, 20),
             color=(255, 255, 255),
             size=32,
         )
@@ -58,11 +70,15 @@ class GameHud:
         self.components = [
             self.player_life,
             self.score,
-            self.inventory_arrows
+            self.difficulty,
+            self.inventory_arrows,
+            self.enemies
         ]
 
     def update(self, delta):
         self.score.change_text(f"Score: {self.game.game_score}")
+        self.difficulty.change_text(f"Difficulty: {self.game.level.current_difficult}")
+        self.enemies.change_text(f"Enemies: {len(self.game.level.enemies)}")
         self.player_life.set_render_amount(self.game.level.player.health.health)
         self.player_life.update(delta)
         self.inventory_arrows.set_render_amount(self.game.level.player.inventory.arrows())
