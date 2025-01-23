@@ -65,7 +65,7 @@ def get_slime_data(slime):
                 health=5,
                 # ia
                 attack_damage=1,
-                attack_range=(40, 40),
+                attack_range=(50, 50),
                 attack_min_distance=20,
                 chasing_min_distance_to_change_direction=15,
                 slime_die_score = 1,
@@ -102,12 +102,49 @@ def get_slime_data(slime):
                 health=2,
                 # ia
                 attack_damage=1,
-                attack_range=(40, 40),
+                attack_range=(50, 50),
                 attack_min_distance=20,
                 chasing_min_distance_to_change_direction=15,
                 slime_die_score=1,
                 loot_chances={
                     '1': 0.1
+                }
+            )
+            # scale
+            slime_data["animations"][SlimeAnimation.IDLE].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.WALKING].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.ATTACKING].scale_frames(3)
+            slime_data["animations"][SlimeAnimation.HURTING].scale_frames(3)
+            return slime_data
+        elif slime == Slimes.TANK_SLIME:
+            slime_data = build_slime_data(
+                animations=import_named_animations(
+                    [
+                        (4, 1, SlimeAnimation.IDLE, 4),
+                        (4, 1, SlimeAnimation.WALKING, 3),
+                        (7, 1, SlimeAnimation.ATTACKING, 6),
+                        (3, 1, SlimeAnimation.HURTING, 4),
+                    ],
+                    [
+                        join('assets', 'characters', 'TankSlime', 'Slime-Idle.png'),
+                        join('assets', 'characters', 'TankSlime', 'Slime-Walking.png'),
+                        join('assets', 'characters', 'TankSlime', 'Slime-Attacking.png'),
+                        join('assets', 'characters', 'TankSlime', 'Slime-Hurting.png'),
+                    ]
+                ),
+                start_animation_name=SlimeAnimation.IDLE,
+                shadow_path=None,
+                shadow_offset=None,
+                speed=150,
+                health=11,
+                # ia
+                attack_damage=1,
+                attack_range=(60, 60),
+                attack_min_distance=25,
+                chasing_min_distance_to_change_direction=14,
+                slime_die_score=1,
+                loot_chances={
+                    '1': 0.2
                 }
             )
             # scale
