@@ -20,8 +20,8 @@ class MonsterLevel(MapLevel):
     def spawner(self):
         if random.random() < SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME[self.current_difficult]:
             self.spawn_slime()
-            if self.amount_spawned % 15 == 0:
-                self.current_difficult = min(self.current_difficult, MAX_DIFFICULT)
+            if self.amount_spawned % 10 == 0:
+                self.current_difficult = min(self.current_difficult+1, MAX_DIFFICULT)
 
     def hardcore(self):
         self.current_difficult = 100

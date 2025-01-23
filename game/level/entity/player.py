@@ -52,7 +52,7 @@ def get_player_data(player_key):
                     [
                         (6, 1, PlayerAnimation.IDLE, 4),
                         (8, 1, PlayerAnimation.WALKING, 4),
-                        (6, 1, PlayerAnimation.ATTACKING, 15),
+                        (6, 1, PlayerAnimation.ATTACKING, 10),
                         # (6, 1, PlayerAnimation.HURTING, ?),
                         (9, 1, PlayerAnimation.ATTACK_ARROW, 20),
                     ],

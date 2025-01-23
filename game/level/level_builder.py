@@ -1,6 +1,6 @@
 from game.settings import *
 from game.level import Levels, MenuLevel, MonsterLevel, GameOverLevel
-from game.level.entity.slime import NormalSlime
+from game.level.entity.slime import NormalSlime, FastSlime
 
 
 def level_builder(level, game):
@@ -16,7 +16,8 @@ def level_builder(level, game):
             map_collision_layers=['collisions'],
             tile_scale=3,
             slime_chances=[
-                (1, NormalSlime)
+                (0.85, NormalSlime),
+                (0.15, FastSlime)
             ],
             background_music_path=join("assets", "sounds", "bg_sound.ogg")
         )
