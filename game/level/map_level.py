@@ -5,7 +5,7 @@ from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGrou
 from game.level.entity import Player, Players, ItemEntity
 from game.ui import PauseScreen, GameHud
 from ..components.groups import ItemSpritesGroup
-from game.level.item import Item, Items
+from game.level.item import Item
 
 
 class MapLevel(Level):
@@ -84,16 +84,20 @@ class MapLevel(Level):
                 return
 
     def spawn_item(self, pos, item: Item):
-        item_entity = ItemEntity(pos, item, self.item_sprites)
+        item_entity = ItemEntity(pos, item, self.render_sprites, self.item_sprites)
         self.dropped_items.append(item_entity)
+
+    def remove_dropped_item(self, item_entity):
+        self.dropped_items.remove(item_entity)
+        item_entity.kill()
 
     def clear_items(self):
         for item_entity in self.dropped_items:
             item_entity.kill()
+        self.dropped_items.clear()
 
     def add_score(self, points):
         self.game.game_score += points
-        self.spawn_item((500, 500), Items.HEALTH_POTION.value)  # TODO: remove
         if self.game.game_score % ENEMIES_TO_GIVE_ARROW == 0:
             self.player.inventory.give_arrow()
 

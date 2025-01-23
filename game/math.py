@@ -17,3 +17,6 @@ def direction_to_point(a, b):
         return Direction.left
     else:
         return Direction.right
+
+def is_in_range(x, a, b) -> bool:
+    return a <= x <= b

@@ -1,5 +1,4 @@
-import random
-
+from game.level.item import Items
 from game.settings import *
 from game.math import points_dis
 from game.components import FollowableSprite
@@ -10,7 +9,7 @@ from game.level.attack import AttackArea
 from game.importer import import_named_animations, import_image
 
 
-def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance,
+def build_slime_data(animations, start_animation_name, shadow_path, shadow_offset, attack_min_distance, loot_chances,
                      attack_damage, speed, health, chasing_min_distance_to_change_direction, attack_range, slime_die_score):
     return {
         "animations": animations,
@@ -25,7 +24,8 @@ def build_slime_data(animations, start_animation_name, shadow_path, shadow_offse
         "speed": speed,
         "health": health,
         "chasing_min_distance_to_change_direction": chasing_min_distance_to_change_direction,
-        "slime_die_score": slime_die_score
+        "slime_die_score": slime_die_score,
+        "loot_chances": loot_chances,
     }
 
 
@@ -68,7 +68,10 @@ def get_slime_data(slime):
                 attack_range=(40, 40),
                 attack_min_distance=20,
                 chasing_min_distance_to_change_direction=15,
-                slime_die_score = 1
+                slime_die_score = 1,
+                loot_chances = {
+                    '1': 0.1
+                }
             )
             # scale
             slime_data["animations"][SlimeAnimation.IDLE].scale_frames(3)
@@ -113,11 +116,19 @@ class Slime(EnemyEntity):
         if self.health > 0:
             self.receiving_damage = True
         else:
+            self.maybe_give_loot()
             self.kill_entity()
 
         # attacking
         if self.attacking:
             self.attacking = False
+
+    def maybe_give_loot(self):
+        for item_id in self.slime_data["loot_chances"]:
+            percent = self.slime_data["loot_chances"][item_id]
+            if random.random() <= percent:
+                self.game.level.spawn_item((self.rect.centerx, self.rect.centery), Items.HEALTH_POTION.value)
+                break
 
     def __animations_handler(self, event, animation, animation_controller):
         if event == AnimationEvent.ANIMATION_CHANGED:

@@ -4,7 +4,7 @@ class Health:
         self.health = max_health
 
     def hurt(self, damage):
-        self.health = self.health - damage
+        self.health = max(self.health - damage, 0)
 
     def heal(self, heal):
-        self.health = self.health + heal
+        self.health = min(self.health + heal, self.max_health)

@@ -1,6 +1,7 @@
 from game.level.attack import AttackArea
 from game.level.entity.components.Shootable import Shootable, PROJECTILE_ARROW
 from game.settings import *
+from game.math import is_in_range
 from game.importer import import_named_animations, import_image
 from game.level.entity import Entity
 from game.components import FollowableSprite, Health
@@ -212,8 +213,11 @@ class Player(Entity):
 
     def try_get_some_item(self):
         for item_entity in self.item_group:
-            print(item_entity.rect)
-            pass #TODO:
+            px = self.rect.centerx
+            py = self.rect.centery
+            if is_in_range(item_entity.rect.x, px - 15, px + 15) and is_in_range(item_entity.rect.y, py - 15, py + 15):
+                item_entity.beGettedByPlayer(self)
+                self.game.level.remove_dropped_item(item_entity)
 
     def update(self, delta):
         self._input()
