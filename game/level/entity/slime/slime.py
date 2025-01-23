@@ -107,7 +107,7 @@ def get_slime_data(slime):
                 chasing_min_distance_to_change_direction=15,
                 slime_die_score=2,
                 loot_chances={
-                    '1': 0.1
+                    '1': 0.08
                 }
             )
             # scale
@@ -144,7 +144,7 @@ def get_slime_data(slime):
                 chasing_min_distance_to_change_direction=14,
                 slime_die_score=3,
                 loot_chances={
-                    '1': 0.2
+                    '1': 0.12
                 }
             )
             # scale
