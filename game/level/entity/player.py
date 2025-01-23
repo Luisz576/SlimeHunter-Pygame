@@ -86,8 +86,9 @@ def get_player_data(player_key):
 
 
 class Player(Entity):
-    def __init__(self, game, pos, group, collision_group, enemy_group, render_projectile_group, player_data_type):
+    def __init__(self, game, pos, group, collision_group, enemy_group, item_group, render_projectile_group, player_data_type):
         self.enemy_group = enemy_group
+        self.item_group = item_group
         # get data
         self.player_data = get_player_data(player_data_type)
         # super
@@ -209,10 +210,17 @@ class Player(Entity):
 
         super()._animate(delta)
 
+    def try_get_some_item(self):
+        for item_entity in self.item_group:
+            print(item_entity.rect)
+            pass #TODO:
+
     def update(self, delta):
         self._input()
 
         if self.delay_to_shoot_delta > 0:
             self.delay_to_shoot_delta -= delta
+
+        self.try_get_some_item()
 
         super().update(delta)

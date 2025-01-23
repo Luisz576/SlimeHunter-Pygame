@@ -1,3 +1,5 @@
+import pygame.sprite
+
 from game.settings import *
 from game.components import FollowableSprite
 
@@ -33,6 +35,10 @@ class RenderSpritesGroup(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, sprite.target.rect.topleft + sprite.offset + self.offset)
                 else:
                     self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+
+class ItemSpritesGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__(self)
 
 class CollisionSpritesGroup(pygame.sprite.Group):
     def __init__(self):

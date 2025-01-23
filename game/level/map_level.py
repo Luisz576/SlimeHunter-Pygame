@@ -2,8 +2,10 @@ from game.settings import *
 from game.level import Level
 from .map import Map
 from game.components import RenderSpritesGroup, CollisionSpritesGroup, EnemyGroup, PlayerGroup
-from game.level.entity import Player, Players
+from game.level.entity import Player, Players, ItemEntity
 from game.ui import PauseScreen, GameHud
+from ..components.groups import ItemSpritesGroup
+from game.level.item import Item, Items
 
 
 class MapLevel(Level):
@@ -28,6 +30,7 @@ class MapLevel(Level):
             raise Exception("Game hud not loaded!")
 
         # sprite groups
+        self.item_sprites = ItemSpritesGroup()
         self.render_sprites = RenderSpritesGroup()
         self.collision_sprites = CollisionSpritesGroup()
 
@@ -37,6 +40,9 @@ class MapLevel(Level):
         # enemy
         self.enemies = []
         self.enemy_group = EnemyGroup()
+
+        # items
+        self.dropped_items = []
 
         # projectile
         self.projectiles = []
@@ -62,6 +68,7 @@ class MapLevel(Level):
                 [self.render_sprites, self.player_group],
                 self.collision_sprites,
                 self.enemy_group,
+                self.item_sprites,
                 self.render_sprites,
                 Players.SOLDIER
             )
@@ -76,8 +83,17 @@ class MapLevel(Level):
                 self.add_score(enemy.enemy_die_score)
                 return
 
+    def spawn_item(self, pos, item: Item):
+        item_entity = ItemEntity(pos, item, self.item_sprites)
+        self.dropped_items.append(item_entity)
+
+    def clear_items(self):
+        for item_entity in self.dropped_items:
+            item_entity.kill()
+
     def add_score(self, points):
         self.game.game_score += points
+        self.spawn_item((500, 500), Items.HEALTH_POTION.value)  # TODO: remove
         if self.game.game_score % ENEMIES_TO_GIVE_ARROW == 0:
             self.player.inventory.give_arrow()
 
