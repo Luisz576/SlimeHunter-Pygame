@@ -99,13 +99,13 @@ def get_slime_data(slime):
                 shadow_path=None,
                 shadow_offset=None,
                 speed=280,
-                health=2,
+                health=3,
                 # ia
                 attack_damage=1,
                 attack_range=(50, 50),
                 attack_min_distance=20,
                 chasing_min_distance_to_change_direction=15,
-                slime_die_score=1,
+                slime_die_score=2,
                 loot_chances={
                     '1': 0.1
                 }
@@ -142,7 +142,7 @@ def get_slime_data(slime):
                 attack_range=(60, 60),
                 attack_min_distance=25,
                 chasing_min_distance_to_change_direction=14,
-                slime_die_score=1,
+                slime_die_score=3,
                 loot_chances={
                     '1': 0.2
                 }
