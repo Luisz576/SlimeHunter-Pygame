@@ -66,6 +66,8 @@ def calc_points_vector_look(p_start, p_end):
     vec = (delta_x / mag, delta_y / mag)
     return vec
 
+SPANW_NEAR_PLAYER_RANGE = 500
+
 MAX_DIFFICULT = 10
 SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME = {
     0: 0.0025,

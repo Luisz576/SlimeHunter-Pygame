@@ -139,8 +139,8 @@ def get_slime_data(slime):
                 health=11,
                 # ia
                 attack_damage=1,
-                attack_range=(60, 60),
-                attack_min_distance=25,
+                attack_range=(70, 60),
+                attack_min_distance=24,
                 chasing_min_distance_to_change_direction=14,
                 slime_die_score=3,
                 loot_chances={
@@ -239,13 +239,13 @@ class Slime(EnemyEntity):
     def __attack_give_damage_handler(self):
         if self.flipped:
             AttackArea(self.attack_damage,
-                (self.rect.centerx, self.rect.centery),
+                (self.rect.centerx + 10, self.rect.centery),
                 (-self.attack_range[0], self.attack_range[1]),
                 self.player_group
             )
         else:
             AttackArea(self.attack_damage,
-                (self.rect.centerx, self.rect.centery),
+                (self.rect.centerx - 10, self.rect.centery),
                 self.attack_range,
                 self.player_group
             )
@@ -254,6 +254,10 @@ class Slime(EnemyEntity):
         if not self.is_attacking() and not self.is_moving():
             if self.can_attack:
                 self.attacking = True
+        elif not self.is_moving():
+            dis_target = (self.target.rect.x - self.rect.x, self.target.rect.y - self.rect.y)
+            if abs(dis_target[0]) > 5:
+                self.flipped = dis_target[0] < 0
 
     def _animate(self, delta):
         # animation

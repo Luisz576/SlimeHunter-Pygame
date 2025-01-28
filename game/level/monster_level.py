@@ -1,6 +1,6 @@
 import random
 from game.level import MapLevel
-from game.settings import SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME, MAX_DIFFICULT
+from game.settings import SLIME_CHANCES_TO_SPAWN_BASED_ON_TIME, MAX_DIFFICULT, SPANW_NEAR_PLAYER_RANGE
 
 
 class MonsterLevel(MapLevel):
@@ -37,7 +37,7 @@ class MonsterLevel(MapLevel):
             if r <= c:
                 new_slime = slime(
                     self.game,
-                    (random.randint(200, 2000), random.randint(200, 1800)),
+                    self.spawn_near_to_player(),
                     [self.render_sprites, self.enemy_group],
                     self.collision_sprites,
                     self.player_group
@@ -45,3 +45,12 @@ class MonsterLevel(MapLevel):
                 new_slime.target = self.player
                 self.enemies.append(new_slime)
                 break
+
+    def spawn_near_to_player(self):
+        x = self.player.rect.x
+        y = self.player.rect.y
+        minSpawnX = max(100, x - SPANW_NEAR_PLAYER_RANGE)
+        maxSpawnX = min(2770, x + SPANW_NEAR_PLAYER_RANGE)
+        minSpawnY = max(100, y - SPANW_NEAR_PLAYER_RANGE)
+        maxSpawnY = min(1770, y + SPANW_NEAR_PLAYER_RANGE)
+        return random.randint(minSpawnX, maxSpawnX), random.randint(minSpawnY, maxSpawnY)
