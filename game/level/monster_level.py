@@ -50,7 +50,7 @@ class MonsterLevel(MapLevel):
         x = self.player.rect.x
         y = self.player.rect.y
         minSpawnX = max(100, x - SPANW_NEAR_PLAYER_RANGE)
-        maxSpawnX = min(2770, x + SPANW_NEAR_PLAYER_RANGE)
+        maxSpawnX = min(2700, x + SPANW_NEAR_PLAYER_RANGE)
         minSpawnY = max(100, y - SPANW_NEAR_PLAYER_RANGE)
-        maxSpawnY = min(1770, y + SPANW_NEAR_PLAYER_RANGE)
+        maxSpawnY = min(1700, y + SPANW_NEAR_PLAYER_RANGE)
         return random.randint(minSpawnX, maxSpawnX), random.randint(minSpawnY, maxSpawnY)

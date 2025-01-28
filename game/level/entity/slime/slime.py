@@ -138,7 +138,7 @@ def get_slime_data(slime):
                 speed=150,
                 health=11,
                 # ia
-                attack_damage=1,
+                attack_damage=2,
                 attack_range=(70, 60),
                 attack_min_distance=24,
                 chasing_min_distance_to_change_direction=14,

@@ -69,7 +69,7 @@ def get_player_data(player_key):
                 shadow_offset=Vector2(25, 63),
                 shadow_scale=3,
                 speed=300,
-                attack_range=(80, 50),
+                attack_range=(70, 50),
                 base_attack_damage=2,
                 delay_to_shoot=2,
                 inventory_config = {
